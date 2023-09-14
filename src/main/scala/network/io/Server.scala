@@ -17,7 +17,9 @@ class Server():
     .channel(classOf[NioServerSocketChannel])
     .childHandler(new ServerInitializer())
 
+/*
   override def start(): Unit =
     // TODO: Load banner and initialize configuration
     // val channel = server.channel()
     Unit
+ */

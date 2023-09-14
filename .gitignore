@@ -37,6 +37,8 @@ build/
 ### Mac OS ###
 .DS_Store
 
-.idea/
-.bsp/
+/.idea
+/.bsp
 /project
+/.bloop
+/.metals
