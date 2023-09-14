@@ -11,4 +11,4 @@ import io.netty.util.concurrent.GlobalEventExecutor
 import lombok.extern.slf4j.Slf4j
 
 object MessageHandler:
-  val clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE)
+    val clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE)

@@ -10,12 +10,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 
 @Slf4j(topic = "Server")
 class Server():
-  private val mainGroup = new NioEventLoopGroup()
-  private val subGroup = new NioEventLoopGroup()
-  private val server = new ServerBootstrap()
-    .group(mainGroup, subGroup)
-    .channel(classOf[NioServerSocketChannel])
-    .childHandler(new ServerInitializer())
+    private val mainGroup = new NioEventLoopGroup()
+    private val subGroup = new NioEventLoopGroup()
+    private val server = new ServerBootstrap()
+        .group(mainGroup, subGroup)
+        .channel(classOf[NioServerSocketChannel])
+        .childHandler(new ServerInitializer())
 
 /*
   override def start(): Unit =

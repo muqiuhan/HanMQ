@@ -10,5 +10,5 @@ import network.io.MessageHandler
 /// The producer's channelId with its own key makes it easy for nio threads to place messages in the corresponding queue.
 /// The sequence number and channelId of the queue so that the dispatcher thread can forward to the corresponding subscription consumer
 object BasicMap:
-  val queueConsumerMap = new ConcurrentHashMap[String, List[ChannelId]]()
-  val clients: DefaultChannelGroup = MessageHandler.clients
+    val queueConsumerMap = new ConcurrentHashMap[String, List[ChannelId]]()
+    val clients: DefaultChannelGroup = MessageHandler.clients
