@@ -2,7 +2,7 @@
 
 # HanMQ
 
-*A simple message queue based on netty, with wildcard mode written in Scala3*
+*A simple message queue based on netty, complete routing distribution using basic topic mode and written in Scala3*
 
 ![Scala 3.3.1](https://img.shields.io/badge/Scala3.3.0-%23DC322F)
 ![SBT 1.9.4](https://img.shields.io/badge/SBT1.9.2-%23380D09)
