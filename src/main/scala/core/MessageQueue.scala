@@ -1,7 +1,7 @@
 package core
 
-import java.util
 import java.util.concurrent.LinkedBlockingQueue
+import scala.collection.mutable
 
 /// CAS is not recommended because of the high concurrency of the message queue design,
 /// and there should be no limit on the length of the message queue, because in practice,
@@ -12,7 +12,7 @@ class MessageQueue(_bindingKey: String, _name: String)
     extends LinkedBlockingQueue[String]:
 
     /// All worker threads working on the current queue
-    private val workers = new util.ArrayList[Thread]()
+    private val workers = new mutable.Queue[Thread]()
 
     def bindingKey: String = _bindingKey
 
