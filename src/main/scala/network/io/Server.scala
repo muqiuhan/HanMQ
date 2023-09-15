@@ -6,8 +6,10 @@ import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import com.typesafe.scalalogging.Logger
 
-class Server():
+/// Netty server main class, responsible for initializing nio thread groups and binding initializers
+object Server {
     private val mainGroup = new NioEventLoopGroup()
     private val subGroup = new NioEventLoopGroup()
     private val server = new ServerBootstrap()
@@ -15,9 +17,22 @@ class Server():
         .channel(classOf[NioServerSocketChannel])
         .childHandler(new ServerInitializer())
 
-/*
-  override def start(): Unit =
-    // TODO: Load banner and initialize configuration
-    // val channel = server.channel()
-    Unit
- */
+    private val log = Logger(getClass)
+
+    def start(): Unit =
+        try {
+            // load banner
+            // load config
+            val channel = server.bind(8888).sync().channel()
+
+            log.info("Server start successfully!")
+            channel.closeFuture().sync()
+        } catch {
+            case e: Exception =>
+                log.error(s"Server error: ${e.getMessage()}")
+                e.printStackTrace()
+        } finally {
+            mainGroup.shutdownGracefully()
+            subGroup.shutdownGracefully()
+        }
+}
