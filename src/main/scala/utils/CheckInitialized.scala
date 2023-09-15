@@ -16,5 +16,5 @@ class CheckInitialized(log: Logger) {
         _initialized = true
     }
 
-    protected def initialized: Boolean = _initialized
+    def initialized: Boolean = _initialized
 }
