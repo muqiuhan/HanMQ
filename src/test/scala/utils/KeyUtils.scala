@@ -1,7 +1,6 @@
 package utils
 
 import org.scalatest.funsuite.AnyFunSuite
-import utils.KeyUtils
 
 class TestKeyUtils extends AnyFunSuite:
     test("item.# shoud match one or more") {

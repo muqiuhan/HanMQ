@@ -21,10 +21,9 @@ object Server {
 
     def start(): Unit =
         try {
-            // load banner
+            utils.Banner.load()
             // load config
             val channel = server.bind(8888).sync().channel()
-
             log.info("Server start successfully!")
             channel.closeFuture().sync()
         } catch {
