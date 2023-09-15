@@ -1,15 +1,14 @@
 package core
 
 import com.typesafe.scalalogging.Logger
-import utils.KeyUtils
-
 import scala.collection.mutable
+import utils.KeyUtils
+import utils.CheckInitialized
 
-object QueueManager {
+object QueueManager extends CheckInitialized(Logger(getClass)) {
     private val log = Logger(getClass)
     private val queues = new mutable.Queue[MessageQueue]()
     private val queueMap = new mutable.HashMap[String, MessageQueue]()
-    private var inited = false
 
     def init(queueNum: Int, bindingKeys: List[String]): Unit = {
         initWithQueueNames(queueNum, bindingKeys, None)
@@ -20,23 +19,23 @@ object QueueManager {
         bindingKeys: List[String],
         queueNames: Option[List[String]]
     ): Unit = {
-        if (inited) { return }
+        if (initialized) { return }
 
         synchronized {
             // double check
-            if (inited) { return }
+            if (initialized) { return }
             if (bindingKeys.length != queueNum) {
                 log.error("The length of bindingKeys not equal to queueNum.")
                 throw ExceptionInInitializerError()
             } else {
                 initWithQueueNames(queueNum, bindingKeys, queueNames)
-                inited = true
+                initialize()
             }
         }
     }
 
     def put(message: String, routingKey: String): Unit = {
-        ifInited()
+        checkInitialized()
         for (queue <- queues) {
             if (KeyUtils.routingKeyCompare(routingKey, queue.bindingKey)) {
                 try {
@@ -50,12 +49,12 @@ object QueueManager {
     }
 
     def get(index: Int): MessageQueue = {
-        ifInited()
+        checkInitialized()
         queues(index)
     }
 
     def contains(name: String): Boolean = {
-        ifInited()
+        checkInitialized()
         queueMap.contains(name)
     }
 
@@ -117,10 +116,4 @@ object QueueManager {
         }
     }
 
-    private def ifInited(): Unit = {
-        if (!inited) {
-            log.error("The QueueManager is not initialized!!!")
-            throw RuntimeException("The QueueManager is not initialized!!!")
-        }
-    }
 }
