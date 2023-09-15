@@ -9,6 +9,8 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import scala.collection.mutable
 import utils.CheckInitialized
 
+/// Create and manage worker threads and distribute messages to consumers.
+/// The worker thread will be set as a daemon thread
 object WorkerManager extends CheckInitialized(Logger(getClass)) {
     private val threads = new mutable.Queue[Thread]()
     private val log = Logger(getClass)
@@ -37,6 +39,7 @@ object WorkerManager extends CheckInitialized(Logger(getClass)) {
     }
 }
 
+/// Continuously obtain messages in the queue and forward them to the corresponding channel.
 case class Task(id: Int) extends Runnable {
     private val log = Logger(getClass)
     private var _queue: Option[MessageQueue] = None

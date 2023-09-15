@@ -5,6 +5,9 @@ import scala.collection.mutable
 import utils.KeyUtils
 import utils.CheckInitialized
 
+/// Initialize the creation and management of all queues,
+/// and provide functions such as placing messages, obtaining specific queues,
+/// and awakening worker threads sleeping on queues
 object QueueManager extends CheckInitialized(Logger(getClass)) {
     private val log = Logger(getClass)
     private val queues = new mutable.Queue[MessageQueue]()
@@ -58,6 +61,7 @@ object QueueManager extends CheckInitialized(Logger(getClass)) {
         queueMap.contains(name)
     }
 
+    /// Wake up a thread waiting on a queue
     def signal(queueName: String): Unit = {
         for (worker <- queueMap(queueName).workers) {
             worker.interrupt()
@@ -69,6 +73,8 @@ object QueueManager extends CheckInitialized(Logger(getClass)) {
         bindingKeys: List[String],
         queueNames: Option[List[String]]
     ): Unit = {
+        // Make sure there are no duplicate names.
+        // If so, slightly modify the original name (name + id)
         val nameChooser = new mutable.HashMap[String, Int]()
         for (i <- 0 until queueNum) {
             if (queueNames.isEmpty || i >= queueNames.get.length) {
