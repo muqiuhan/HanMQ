@@ -3,10 +3,10 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.3.1"
 
 lazy val root = (project in file("."))
-  .settings(
-    name := "HanMQ"
+    .settings(
+      name := "HanMQ"
 //    idePackagePrefix := Some("com.muqiuhan")
-  )
+    )
 
 libraryDependencies += "io.netty" % "netty-all" % "4.1.50.Final"
 libraryDependencies += "org.apache.commons" % "commons-lang3" % "3.4"
