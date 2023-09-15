@@ -12,11 +12,13 @@ class MessageQueue(_bindingKey: String, _name: String)
     extends LinkedBlockingQueue[String] {
 
     /// All worker threads working on the current queue
-    private val workers = new mutable.Queue[Thread]()
+    private val _workers = new mutable.Queue[Thread]()
 
     def bindingKey: String = _bindingKey
 
     def name: String = _name
+
+    def workers: mutable.Queue[Thread] = _workers
 
     override def toString: String = {
         s"MessageQueue(bindingKey = '${bindingKey}', name = '${name}', elements = ${super.toString}"

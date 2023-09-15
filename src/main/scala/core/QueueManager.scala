@@ -1,6 +1,7 @@
 package core
 
 import com.typesafe.scalalogging.Logger
+import utils.KeyUtils
 
 import scala.collection.mutable
 
@@ -31,6 +32,36 @@ object QueueManager {
                 initWithQueueNames(queueNum, bindingKeys, queueNames)
                 inited = true
             }
+        }
+    }
+
+    def put(message: String, routingKey: String): Unit = {
+        ifInited()
+        for (queue <- queues) {
+            if (KeyUtils.routingKeyCompare(routingKey, queue.bindingKey)) {
+                try {
+                    queue.put(message)
+                } catch {
+                    case e: Exception =>
+                        log.warn(e.getMessage)
+                }
+            }
+        }
+    }
+
+    def get(index: Int): MessageQueue = {
+        ifInited()
+        queues(index)
+    }
+
+    def contains(name: String): Boolean = {
+        ifInited()
+        queueMap.contains(name)
+    }
+
+    def signal(queueName: String): Unit = {
+        for (worker <- queueMap(queueName).workers) {
+            worker.interrupt()
         }
     }
 
@@ -83,6 +114,13 @@ object QueueManager {
         } else {
             nameChooser.put(name, 1)
             Some(name, new MessageQueue(bindingKey, name))
+        }
+    }
+
+    private def ifInited(): Unit = {
+        if (!inited) {
+            log.error("The QueueManager is not initialized!!!")
+            throw RuntimeException("The QueueManager is not initialized!!!")
         }
     }
 }
