@@ -44,8 +44,8 @@ object QueueManager extends CheckInitialized(Logger(getClass)) {
                 try {
                     queue.put(message)
                 } catch {
-                    case e: Exception =>
-                        log.warn(e.getMessage)
+                    case e: InterruptedException =>
+                        ()
                 }
             }
         }

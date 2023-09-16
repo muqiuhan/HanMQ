@@ -60,7 +60,7 @@ case class Task(id: Int) extends Runnable {
                         Thread.sleep(Long.MaxValue)
                         log.debug("No consumers, sleeping...")
                     } catch {
-                        case e: Exception =>
+                        case e: InterruptedException =>
                             log.warn(e.getMessage)
                     }
                 }
@@ -73,8 +73,7 @@ case class Task(id: Int) extends Runnable {
                         )
                 }
             } catch {
-                case e: Exception =>
-                    log.warn(e.getMessage)
+                case e: InterruptedException => ()
             }
         }
     }
