@@ -1,4 +1,4 @@
-package network.io
+package server
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.Channel
@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import com.typesafe.scalalogging.Logger
+import server.ServerInitializer
 
 /// Netty server main class, responsible for initializing nio thread groups and binding initializers
 object Server {

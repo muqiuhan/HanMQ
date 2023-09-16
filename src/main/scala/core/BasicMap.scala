@@ -5,7 +5,8 @@ import io.netty.channel.group.{ChannelGroup, DefaultChannelGroup}
 
 import java.util.concurrent.ConcurrentHashMap
 import scala.collection.mutable
-import network.io.MessageHandler
+import server.MessageHandler
+import server.MessageHandler
 
 /// Used to manage the basic mapping relationships in message queues
 /// The producer's channelId with its own key makes it easy for nio threads to place messages in the corresponding queue.
