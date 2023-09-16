@@ -47,7 +47,7 @@ case class Task(id: Int) extends Runnable {
     def queue: MessageQueue = _queue.get
 
     override def run(): Unit = {
-       log.info(s"worker thread of queue ${queue.name} is working")
+        log.info(s"worker thread of queue ${queue.name} is working")
 
         var message = new String();
         while (true) {

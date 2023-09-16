@@ -1,42 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
-  <appender name="DEBUG" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %cyan(%-5level) %logger{15} - %msg%n</pattern>
-      </encoder>
-  </appender>
+    <property name="pattern-color" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %white(%thread) %cyan(%logger{50}) %highlight(>) %msg %n"/>
 
-  <appender name="INFO" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %green(%-5level) %logger{15} - %msg%n</pattern>
-      </encoder>
-  </appender>
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
 
-  <appender name="WARN" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %yellow(%-5level) %logger{15} - %msg%n</pattern>
-      </encoder>
-  </appender>
+    <!-- 控制台输出-带颜色 -->
+    <appender name="CONSOLE-WITH-COLOR" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern-color}</pattern>
+        </encoder>
+    </appender>
 
-  <appender name="ERROR" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-          <pattern>%d{HH:mm:ss.SSS} [%thread] %red(%-5level) %logger{15} - %msg%n</pattern>
-      </encoder>
-  </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE-WITH-COLOR"/>
+    </root>
 
-  <root level="debug">
-      <appender-ref ref="DEBUG" />
-  </root>
+    <logger name="com.example.logbackdemo.IndexAction" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
 
-  <root level="info">
-      <appender-ref ref="INFO" />
-  </root>
-
-  <root level="warn">
-      <appender-ref ref="WARN" />
-  </root>
-
-  <root level="error">
-      <appender-ref ref="ERROR" />
-  </root>
 </configuration>
