@@ -23,21 +23,18 @@ object Banner {
 
     def load(): Unit = {
         println()
-        val banner = Source
-            .fromFile(
-              getClass.getClassLoader().getResource("banner").getPath()
-            )
-            .getLines
 
         System.getProperty("os.name") match {
             case "Linux" | "Macos" =>
                 println(
-                  banner.mkString("\u001b[38;5;10m", "\n", "\u001b[0m")
+                  banner
+                      .split("\n")
+                      .mkString("\u001b[38;5;10m", "\n", "\u001b[0m")
                 )
 
             case "Windows" =>
                 println(
-                  banner.mkString("\n")
+                  banner.split("\n").mkString("\n")
                 )
         }
 
