@@ -80,7 +80,7 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame] {
             )
             .addListener(future => {
                 channel.close()
-                log.debug("channel removed successfully")
+                log.info("channel removed successfully")
             })
     }
 

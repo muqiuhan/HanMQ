@@ -23,7 +23,7 @@ object Server {
     def start(): Unit =
         try {
             utils.Banner.load()
-            // load config
+            Class.forName("config.Config")
             val channel = server.bind(8888).sync().channel()
             log.info("Server start successfully!")
             channel.closeFuture().sync()

@@ -47,7 +47,7 @@ case class Task(id: Int) extends Runnable {
     def queue: MessageQueue = _queue.get
 
     override def run(): Unit = {
-        log.debug(s"worker thread of queue ${queue.name} is working")
+       log.info(s"worker thread of queue ${queue.name} is working")
 
         var message = new String();
         while (true) {
@@ -58,7 +58,7 @@ case class Task(id: Int) extends Runnable {
                 while (queue == null || channelIds.isEmpty) {
                     try {
                         Thread.sleep(Long.MaxValue)
-                        log.debug("No consumers, sleeping...")
+                        log.info("No consumers, sleeping...")
                     } catch {
                         case e: InterruptedException =>
                             log.warn(e.getMessage)

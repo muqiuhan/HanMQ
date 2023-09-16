@@ -1,3 +1,4 @@
+import server.Server
 @main
 def main(): Unit =
-    println("Hello world!")
+    Server.start()

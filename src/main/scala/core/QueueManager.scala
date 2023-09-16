@@ -13,14 +13,14 @@ object QueueManager extends CheckInitialized(Logger(getClass)) {
     private val queues = new mutable.Queue[MessageQueue]()
     private val queueMap = new mutable.HashMap[String, MessageQueue]()
 
-    def init(queueNum: Int, bindingKeys: List[String]): Unit = {
+    def init(queueNum: Int, bindingKeys: Array[String]): Unit = {
         initWithQueueNames(queueNum, bindingKeys, None)
     }
 
     def init(
         queueNum: Int,
-        bindingKeys: List[String],
-        queueNames: Option[List[String]]
+        bindingKeys: Array[String],
+        queueNames: Option[Array[String]]
     ): Unit = {
         if (initialized) { return }
 
@@ -70,8 +70,8 @@ object QueueManager extends CheckInitialized(Logger(getClass)) {
 
     private def initWithQueueNames(
         queueNum: Int,
-        bindingKeys: List[String],
-        queueNames: Option[List[String]]
+        bindingKeys: Array[String],
+        queueNames: Option[Array[String]]
     ): Unit = {
         // Make sure there are no duplicate names.
         // If so, slightly modify the original name (name + id)
