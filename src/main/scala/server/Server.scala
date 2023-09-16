@@ -24,7 +24,7 @@ object Server {
         try {
             utils.Banner.load()
             Class.forName("config.Config")
-            val channel = server.bind(8888).sync().channel()
+            val channel = server.bind(9993).sync().channel()
             log.info("Server start successfully!")
             channel.closeFuture().sync()
         } catch {

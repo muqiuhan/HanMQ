@@ -24,7 +24,7 @@ class Client(serverURI: URI, name: String, typ: Int)
 
     override def onClose(code: Int, reason: String, remote: Boolean): Unit = {
         log.info(
-          "Connection closed. code: ${code}, reason: ${reason}, remote: ${remote}"
+          s"Connection closed. code: ${code}, reason: ${reason}, remote: ${remote}"
         )
     }
 

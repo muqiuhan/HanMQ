@@ -2,7 +2,7 @@ package utils
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class TestKeyUtils extends AnyFunSuite:
+class TestKey extends AnyFunSuite {
     test("item.# shoud match one or more") {
         assert(
           KeyUtils.routingKeyCompare("item", Data.matchOneOrMore)
@@ -48,10 +48,11 @@ class TestKeyUtils extends AnyFunSuite:
           KeyUtils.routingKeyCompare("item2", Data.matchOr)
         )
     }
+}
+end TestKey
 
-end TestKeyUtils
-
-case object Data:
+case object Data {
     val matchOneOrMore = "item.#"
     val matchOne = "item.*"
     val matchOr = "item|item2"
+}
