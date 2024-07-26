@@ -13,7 +13,8 @@ object QueueManager extends CheckInitialized(Logger(getClass)):
   private val queues   = new mutable.Queue[MessageQueue]()
   private val queueMap = new mutable.HashMap[String, MessageQueue]()
 
-  def init(queueNum: Int, bindingKeys: Array[String]): Unit = initWithQueueNames(queueNum, bindingKeys, None)
+  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit = 
+    initWithQueueNames(queueNum, bindingKeys, None)
 
   def init(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
     if initialized then return

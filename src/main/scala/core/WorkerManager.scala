@@ -1,11 +1,10 @@
 package core
 
-import com.alibaba.fastjson.JSON
 import com.typesafe.scalalogging.Logger
 import io.netty.channel.Channel
 import io.netty.channel.ChannelId
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
-
+import upickle.default._
 import scala.collection.mutable
 import utils.CheckInitialized
 
@@ -42,7 +41,7 @@ case class Task(id: Int) extends Runnable:
   private val log                          = Logger(getClass)
   private var _queue: Option[MessageQueue] = None
 
-  def queue: MessageQueue = _queue.get
+  inline def queue: MessageQueue = _queue.get
 
   override def run(): Unit =
     log.info(s"worker thread of queue ${queue.name} is working")
@@ -61,7 +60,7 @@ case class Task(id: Int) extends Runnable:
         end while
 
         for channelId <- channelIds do
-          BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(message)))
+          BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(write(message)))
       catch case e: InterruptedException => ()
     end while
   end run

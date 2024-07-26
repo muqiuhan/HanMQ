@@ -6,14 +6,20 @@ import server.Server
 class TestClient extends AnyFunSuite:
   val url = "ws://localhost:9993/";
 
-  test("Test producer and consumer") {
-    val server = new Thread(() => Server.start());
-    server.start()
-    Thread.sleep(1000)
-
+  test("Test producer") {
     val producer1 = new Producer(URI.create(url), "producer_1");
     val producer2 = new Producer(URI.create(url), "producer_2");
     val producer3 = new Producer(URI.create(url), "producer_3");
+
+    producer1.send("Make America Great Again!", "American.great.again.!");
+    producer2.send("China is getting stronger!", "China.daily.com");
+    producer2.send("中国建党一百年万岁", "China.xinhua.net");
+    producer3.send("The voice from Europe", "UK.Reuters.com");
+
+    System.in.read()
+  }
+
+  test("test consumer") {
     val consumer1 = new Consumer(URI.create(url), "American");
     val consumer2 = new Consumer(URI.create(url), "China");
     val consumer3 = new Consumer(URI.create(url), "UK");
@@ -25,11 +31,6 @@ class TestClient extends AnyFunSuite:
     consumer3.register("UK", true);
     consumer3.onMessage(message => println("UK: " + message));
 
-    producer1.send("Make America Great Again!", "American.great.again.!");
-    producer2.send("China is getting stronger!", "China.daily.com");
-    producer2.send("中国建党一百年万岁", "China.xinhua.net");
-    producer3.send("The voice from Europe", "UK.Reuters.com");
-
-    server.interrupt();
+    System.in.read()
   }
 end TestClient

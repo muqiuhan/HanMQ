@@ -57,7 +57,6 @@ case class Message(
 ## Dependencies
 - [Netty: An event-driven asynchronous network application framework](https://github.com/netty/netty)
 - [Common Lang: Apache Commons Lang provides a host of helper utilities for the java.lang API](https://commons.apache.org/proper/commons-lang/)
-- [Fastjson:  Java library that can be used to convert Java Objects into their JSON representation](https://github.com/alibaba/fastjson)
 - [Java-WebSocket: A barebones WebSocket client and server implementation written in 100% Java.](https://github.com/TooTallNate/Java-WebSocket)
 - [Scala-logging: Convenient and performant logging library for Scala wrapping SLF4J.](https://github.com/lightbend-labs/scala-logging)
 - [ScalaTest: A testing tool for Scala and Java developers](https://github.com/scalatest/scalatest)

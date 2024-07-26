@@ -1,5 +1,7 @@
 package message
 
+import upickle.default.*
+
 /// Message protocol format:
 /// consumer's subscription registration message:
 ///     { type: 0, extend: ["queue_name1","queue_name1"] }
@@ -14,4 +16,4 @@ case class Message(
 
     /// The time the message was sent
     date: String
-)
+) derives ReadWriter

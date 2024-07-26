@@ -11,9 +11,13 @@ class TestKey extends AnyFunSuite:
     assert(KeyUtils.routingKeyCompare("item.a", Data.matchOneOrMore))
   }
 
-  test("item.# should not match ite") { assert(!KeyUtils.routingKeyCompare("ite", Data.matchOneOrMore)) }
+  test("item.# should not match ite") { 
+    assert(!KeyUtils.routingKeyCompare("ite", Data.matchOneOrMore))
+  }
 
-  test("item.* should match only one") { assert(KeyUtils.routingKeyCompare("item.a", Data.matchOne)) }
+  test("item.* should match only one") {
+    assert(KeyUtils.routingKeyCompare("item.a", Data.matchOne))
+  }
 
   test("item.* should not match item or item1") {
     assert(!KeyUtils.routingKeyCompare("item", Data.matchOne))

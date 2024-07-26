@@ -11,14 +11,19 @@ class Client(serverURI: URI, name: String, typ: Int) extends WebSocketClient(ser
   private var onMessageAction: Option[Consumer[String]] = None
   private val log                                       = Logger(getClass())
 
-  override def onOpen(handshakedata: ServerHandshake): Unit = log.info(s"Client ${name} connects successfully")
+  override def onOpen(handshakedata: ServerHandshake): Unit =
+    log.info(s"Client ${name} connects successfully")
 
-  override def onMessage(message: String): Unit = onMessageAction.foreach(onMessageAction => onMessageAction.accept(message))
+  override def onMessage(message: String): Unit =
+    onMessageAction.foreach(onMessageAction => onMessageAction.accept(message))
 
-  override def onClose(code: Int, reason: String, remote: Boolean): Unit = log
-    .info(s"Connection closed. code: ${code}, reason: ${reason}, remote: ${remote}")
+  override def onClose(code: Int, reason: String, remote: Boolean): Unit =
+    log.info(s"Connection closed. code: ${code}, reason: ${reason}, remote: ${remote}")
 
-  override def onError(ex: Exception): Unit = log.error(s"Connection error: ${ex.getMessage()}")
+  override def onError(ex: Exception): Unit =
+    log.error(s"Connection error: ${ex.getMessage()}")
 
-  def setOnMessageAction(action: Consumer[String]): Unit = onMessageAction = Some(action)
+  inline def setOnMessageAction(action: Consumer[String]): Unit =
+    onMessageAction = Some(action)
+
 end Client
