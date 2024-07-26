@@ -24,8 +24,7 @@ object Banner:
 
     System.getProperty("os.name") match
       case "Linux" | "Macos" => println(banner.split("\n").mkString("\u001b[38;5;10m", "\n", "\u001b[0m"))
-
-      case "Windows" => println(banner.split("\n").mkString("\n"))
+      case "Windows"         => println(banner.split("\n").mkString("\n"))
     end match
   end load
 end Banner

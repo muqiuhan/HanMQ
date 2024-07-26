@@ -9,7 +9,8 @@ class CheckInitialized:
       throw RuntimeException("The QueueManager is not initialized")
   end checkInitialized
 
-  protected inline def initialize(): Unit = _initialized = true
+  protected inline def initialize(): Unit =
+    _initialized = true
 
   def initialized: Boolean = _initialized
 end CheckInitialized

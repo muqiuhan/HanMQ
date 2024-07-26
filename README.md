@@ -4,8 +4,7 @@
 
 *A simple message queue based on netty, complete routing distribution using basic topic mode and written in Scala3*
 
-![Scala 3.3.1](https://img.shields.io/badge/Scala3.3.0-%23DC322F)
-![SBT 1.9.4](https://img.shields.io/badge/SBT1.9.2-%23380D09)
+![Scala 3.4.2](https://img.shields.io/badge/Scala3.3.0-%23DC322F)
 
 ![Build and Run](https://github.com/muqiuhan/HanMQ/actions/workflows/BuildAndTest.yaml/badge.svg)
 
@@ -50,16 +49,24 @@ case class Message(
 
 ## Build & Test & Run
 
-- build: `sbt compile`
-- run: `sbt run`
-- test: `sbt test`
+`sbt run` then `sbt test`
 
 ## Dependencies
-- [Netty: An event-driven asynchronous network application framework](https://github.com/netty/netty)
-- [Common Lang: Apache Commons Lang provides a host of helper utilities for the java.lang API](https://commons.apache.org/proper/commons-lang/)
-- [Java-WebSocket: A barebones WebSocket client and server implementation written in 100% Java.](https://github.com/TooTallNate/Java-WebSocket)
-- [Scala-logging: Convenient and performant logging library for Scala wrapping SLF4J.](https://github.com/lightbend-labs/scala-logging)
-- [ScalaTest: A testing tool for Scala and Java developers](https://github.com/scalatest/scalatest)
+
+```scala 3
+...
+      libraryDependencies ++= Seq(
+          "com.lihaoyi"       %% "upickle"         % "4.0.0",
+          "com.outr"          %% "scribe"          % "3.15.0",
+          "io.netty"           % "netty-all"       % "4.1.50.Final",
+          "org.apache.commons" % "commons-lang3"   % "3.4",
+          "com.alibaba"        % "fastjson"        % "1.2.52",
+          "ch.qos.logback"     % "logback-classic" % "1.2.10",
+          "org.scalatest"     %% "scalatest"       % "3.2.17" % "test",
+          "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
+      )
+...
+```
 
 ## Reference
 - [RabbitMQ3.5.3 source code commented version for easy reading)](https://github.com/sky-big/RabbitMQ)
@@ -73,7 +80,7 @@ case class Message(
 ## LICENSE
 The MIT License (MIT)
 
-Copyright (c) 2022 Muqiu Han
+Copyright (c) 2023 Muqiu Han
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

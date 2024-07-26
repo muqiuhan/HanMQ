@@ -8,34 +8,35 @@ import io.netty.channel.group.ChannelGroup
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.util.concurrent.GlobalEventExecutor
-
 import scala.collection.mutable
 import message.Message
 import core.BasicMap
 import core.QueueManager
 import upickle.default.*
+import scala.util.{Try, Failure, Success}
 
-/// Key components in Netty, handling messages from clients
+/** Key components in Netty, handling messages from clients */
 class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
+
+  private def route(data: String, channel: Channel) =
+    val message = read[Message](data)
+
+    message.typ match
+      case 0 /* Subscription registration message from consumer */ => processConsumerMessage(channel, message)
+      case 1 /* General messages from the producer */              => processProducerMessage(message)
+      case typ: Int                                                => throw Exception(s"Unknown message type: ${typ}")
+    end match
+  end route
+
   protected def channelRead0(ctx: ChannelHandlerContext, msg: TextWebSocketFrame): Unit =
     val data    = msg.text()
     val channel = ctx.channel()
 
     MessageHandler.clients.add(channel)
-    try
-      val message = read[Message](data)
-
-      message.typ match
-        // Subscription registration message from consumer
-        case 0 => processConsumerMessage(channel, message)
-
-        // General messages from the producer
-        case 1 => processProducerMessage(message)
-
-        case typ: Int => throw Exception(s"Unknown message type: ${typ}")
-      end match
-    catch case e: Exception => wrongMessageFormat(channel, data)
-    end try
+    Try(route(data, channel)) match
+      case Failure(e) => wrongMessageFormat(channel, data)
+      case _          => ()
+    end match
   end channelRead0
 
   private def processConsumerMessage(channel: Channel, message: Message): Unit =
@@ -50,7 +51,8 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
     end for
   end processConsumerMessage
 
-  private def processProducerMessage(message: Message): Unit = QueueManager.put(message.content, message.content)
+  private inline def processProducerMessage(message: Message): Unit =
+    QueueManager.put(message.content, message.content)
 
   private def wrongMessageFormat(channel: Channel, data: String): Unit =
     scribe.error(s"Wrong message format: ${data}")
@@ -60,10 +62,12 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
     )
   end wrongMessageFormat
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = scribe.error(cause.getMessage())
+  override inline def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit =
+    scribe.error(cause.getMessage())
+
 end MessageHandler
 
 case object MessageHandler:
-  /// Used to record and manage all client channels, and can automatically remove disconnected sessions
+  /** Used to record and manage all client channels, and can automatically remove disconnected sessions. */
   val clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE)
 end MessageHandler

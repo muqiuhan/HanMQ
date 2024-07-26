@@ -10,7 +10,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import server.ServerInitializer
 import config.Config
 
-/// Netty server main class, responsible for initializing nio thread groups and binding initializers
+/** Netty server main class, responsible for initializing nio thread groups and binding initializers */
 object Server:
   private val mainGroup = new NioEventLoopGroup()
   private val subGroup  = new NioEventLoopGroup()

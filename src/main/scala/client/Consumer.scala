@@ -31,4 +31,5 @@ class Consumer(serverURI: URI, name: String):
   inline def register(queueName: String, append: Boolean): Unit     = register(List(queueName), append)
   inline def onMessage(action: java.util.function.Consumer[String]) = client.setOnMessageAction(action)
   inline def getRegisterInfo(): List[String]                        = registerInfo.toList
+
 end Consumer

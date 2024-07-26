@@ -3,16 +3,16 @@ package core
 import scala.collection.mutable
 import utils.KeyUtils
 import utils.CheckInitialized
+import scala.util.{Try, Failure, Success}
 
-/// Initialize the creation and management of all queues,
-/// and provide functions such as placing messages, obtaining specific queues,
-/// and awakening worker threads sleeping on queues
+/** Initialize the creation and management of all queues,
+  * and provide functions such as placing messages, obtaining specific queues,
+  * and awakening worker threads sleeping on queues */
 object QueueManager extends CheckInitialized:
   private val queues   = new mutable.Queue[MessageQueue]()
   private val queueMap = new mutable.HashMap[String, MessageQueue]()
 
-  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit =
-    initWithQueueNames(queueNum, bindingKeys, None)
+  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit = initWithQueueNames(queueNum, bindingKeys, None)
 
   def init(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
     if initialized then return
@@ -32,32 +32,40 @@ object QueueManager extends CheckInitialized:
 
   def put(message: String, routingKey: String): Unit =
     checkInitialized()
+
     for queue <- queues do
       if KeyUtils.routingKeyCompare(routingKey, queue.bindingKey) then
-        try queue.put(message)
-        catch case e: InterruptedException => ()
+        Try(queue.put(message)) match
+          case Failure(e: InterruptedException) => ()
+          case Failure(e)                       => throw e
+          case _                                => ()
     end for
   end put
 
-  def get(index: Int): MessageQueue =
+  inline def get(index: Int): MessageQueue =
     checkInitialized()
     queues(index)
   end get
 
-  def contains(name: String): Boolean =
+  inline def contains(name: String): Boolean =
     checkInitialized()
     queueMap.contains(name)
   end contains
 
-  /// Wake up a thread waiting on a queue
-  def signal(queueName: String): Unit = for worker <- queueMap(queueName).workers do worker.interrupt()
+  /** Wake up a thread waiting on a queue */
+  inline def signal(queueName: String): Unit =
+    for worker <- queueMap(queueName).workers do
+      worker.interrupt()
+  end signal
 
   private def initWithQueueNames(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
     // Make sure there are no duplicate names.
     // If so, slightly modify the original name (name + id)
     val nameChooser = new mutable.HashMap[String, Int]()
+
     for i <- 0 until queueNum do
-      if queueNames.isEmpty || i >= queueNames.get.length then queues.addOne(new MessageQueue(bindingKeys(i), s"queue_${i}"))
+      if queueNames.isEmpty || i >= queueNames.get.length then
+        queues.addOne(new MessageQueue(bindingKeys(i), s"queue_${i}"))
       else
         queueNames match
           case None => throw ExceptionInInitializerError()
@@ -82,4 +90,7 @@ object QueueManager extends CheckInitialized:
     else
       nameChooser.put(name, 1)
       Some(name, new MessageQueue(bindingKey, name))
+    end if
+  end initWhenQueueNamesIsNotEmpty
+
 end QueueManager
