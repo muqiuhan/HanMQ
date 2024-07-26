@@ -2,25 +2,23 @@ package client
 
 import java.net.URI
 import scala.collection.mutable
-import com.typesafe.scalalogging.Logger
+
 import message.Message
 import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
-import upickle.default._
+import upickle.default.*
 
 class Consumer(serverURI: URI, name: String):
 
   private val registerInfo = new mutable.Queue[String]
   private val client       = new Client(serverURI, name, 0)
-  private val log          = Logger(getClass)
 
   Try(client.connectBlocking()) match
-    case Failure(e: InterruptedException) => log.error(e.getMessage())
+    case Failure(e: InterruptedException) => scribe.error(e.getMessage())
     case Failure(e)                       => throw e
     case Success(_)                       => ()
   end match
-  
   /** Register and bind a new queue to the Client
     * [append]: true means append binding, false means overwrite binding */
   def register(queueNames: List[String], append: Boolean): Unit =

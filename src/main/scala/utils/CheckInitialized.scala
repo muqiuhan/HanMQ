@@ -1,13 +1,11 @@
 package utils
 
-import com.typesafe.scalalogging.Logger
-
-class CheckInitialized(log: Logger):
+class CheckInitialized:
   private var _initialized = false
 
   protected def checkInitialized(): Unit =
     if !_initialized then
-      log.error("The QueueManager is not initialized")
+      scribe.error("The QueueManager is not initialized")
       throw RuntimeException("The QueueManager is not initialized")
   end checkInitialized
 

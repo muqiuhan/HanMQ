@@ -2,14 +2,13 @@ package client
 
 import java.net.URI
 import message.Message
-import com.typesafe.scalalogging.Logger
+
 import scala.util.{Try, Failure, Success}
-import upickle.default._
+import upickle.default.*
 
 class Producer(serverURI: URI, name: String):
   private val client                     = new Client(serverURI, name, 1)
   private var routingKey: Option[String] = None
-  private val log                        = Logger(getClass())
 
   Try(client.connectBlocking()) match
     case Failure(e) => throw e
@@ -23,7 +22,7 @@ class Producer(serverURI: URI, name: String):
 
   def send(message: String): Unit =
     routingKey match
-      case None             => log.error("Please set a default routing key.")
+      case None             => scribe.error("Please set a default routing key.")
       case Some(routingKey) => send(message, routingKey)
   end send
 

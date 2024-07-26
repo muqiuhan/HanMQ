@@ -1,11 +1,9 @@
 package utils
 
-import com.typesafe.scalalogging.Logger
 import scala.Console.*
 import scala.io.Source
 
 object Banner:
-  private val log = Logger(getClass)
 
   private val banner = """
           :::    :::        :::        ::::    :::      :::   :::      :::::::: 

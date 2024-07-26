@@ -8,7 +8,7 @@ import io.netty.channel.group.ChannelGroup
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.util.concurrent.GlobalEventExecutor
-import com.typesafe.scalalogging.Logger
+
 import scala.collection.mutable
 import message.Message
 import core.BasicMap
@@ -17,8 +17,6 @@ import upickle.default.*
 
 /// Key components in Netty, handling messages from clients
 class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
-  private val log = Logger(getClass)
-
   protected def channelRead0(ctx: ChannelHandlerContext, msg: TextWebSocketFrame): Unit =
     val data    = msg.text()
     val channel = ctx.channel()
@@ -55,14 +53,14 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
   private def processProducerMessage(message: Message): Unit = QueueManager.put(message.content, message.content)
 
   private def wrongMessageFormat(channel: Channel, data: String): Unit =
-    log.error(s"Wrong message format: ${data}")
+    scribe.error(s"Wrong message format: ${data}")
     channel.writeAndFlush(new TextWebSocketFrame("Wrong message format")).addListener(future =>
       channel.close()
-      log.info("channel removed successfully")
+      scribe.info("channel removed successfully")
     )
   end wrongMessageFormat
 
-  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = log.error(cause.getMessage())
+  override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit = scribe.error(cause.getMessage())
 end MessageHandler
 
 case object MessageHandler:

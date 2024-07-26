@@ -1,6 +1,5 @@
 package core
 
-import com.typesafe.scalalogging.Logger
 import scala.collection.mutable
 import utils.KeyUtils
 import utils.CheckInitialized
@@ -8,12 +7,11 @@ import utils.CheckInitialized
 /// Initialize the creation and management of all queues,
 /// and provide functions such as placing messages, obtaining specific queues,
 /// and awakening worker threads sleeping on queues
-object QueueManager extends CheckInitialized(Logger(getClass)):
-  private val log      = Logger(getClass)
+object QueueManager extends CheckInitialized:
   private val queues   = new mutable.Queue[MessageQueue]()
   private val queueMap = new mutable.HashMap[String, MessageQueue]()
 
-  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit = 
+  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit =
     initWithQueueNames(queueNum, bindingKeys, None)
 
   def init(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
@@ -23,7 +21,7 @@ object QueueManager extends CheckInitialized(Logger(getClass)):
       // double check
       if initialized then return
       if bindingKeys.length != queueNum then
-        log.error("The length of bindingKeys not equal to queueNum.")
+        scribe.error("The length of bindingKeys not equal to queueNum.")
         throw ExceptionInInitializerError()
       else
         initWithQueueNames(queueNum, bindingKeys, queueNames)
@@ -77,7 +75,7 @@ object QueueManager extends CheckInitialized(Logger(getClass)):
     if nameChooser.contains(name) then
       nameChooser.get(name).map(old =>
         val newName = s"${name}${old}"
-        log.warn(s"A duplicated queue queueNames ${name} is modified to ${newName}")
+        scribe.warn(s"A duplicated queue queueNames ${name} is modified to ${newName}")
         nameChooser.put(name, old + 1)
         (name, new MessageQueue(bindingKey, newName))
       )

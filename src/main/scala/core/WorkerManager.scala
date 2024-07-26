@@ -1,18 +1,16 @@
 package core
 
-import com.typesafe.scalalogging.Logger
 import io.netty.channel.Channel
 import io.netty.channel.ChannelId
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
-import upickle.default._
+import upickle.default.*
 import scala.collection.mutable
 import utils.CheckInitialized
 
 /// Create and manage worker threads and distribute messages to consumers.
 /// The worker thread will be set as a daemon thread
-object WorkerManager extends CheckInitialized(Logger(getClass)):
+object WorkerManager extends CheckInitialized:
   private val threads = new mutable.Queue[Thread]()
-  private val log     = Logger(getClass)
 
   def init(threadNum: Int): Unit =
     if initialized then return
@@ -22,7 +20,7 @@ object WorkerManager extends CheckInitialized(Logger(getClass)):
 
       for i <- 0 until threadNum do threads.addOne(initThread(i))
 
-      log.info(s"${threadNum} worker threads are started.")
+      scribe.info(s"${threadNum} worker threads are started.")
       initialize()
     }
   end init
@@ -38,13 +36,12 @@ end WorkerManager
 
 /// Continuously obtain messages in the queue and forward them to the corresponding channel.
 case class Task(id: Int) extends Runnable:
-  private val log                          = Logger(getClass)
   private var _queue: Option[MessageQueue] = None
 
   inline def queue: MessageQueue = _queue.get
 
   override def run(): Unit =
-    log.info(s"worker thread of queue ${queue.name} is working")
+    scribe.info(s"worker thread of queue ${queue.name} is working")
 
     var message = new String();
     while true do
@@ -55,8 +52,8 @@ case class Task(id: Int) extends Runnable:
         while queue == null || channelIds.isEmpty do
           try
             Thread.sleep(Long.MaxValue)
-            log.info("No consumers, sleeping...")
-          catch case e: InterruptedException => log.warn(e.getMessage)
+            scribe.info("No consumers, sleeping...")
+          catch case e: InterruptedException => scribe.warn(e.getMessage)
         end while
 
         for channelId <- channelIds do
