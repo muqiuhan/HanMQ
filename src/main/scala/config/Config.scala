@@ -34,7 +34,10 @@ object Config:
     QueueManager.init(queueNum, bindingKeys, queueNames)
     WorkerManager.init(queueNum)
 
-    if QueueManager.initialized && WorkerManager.initialized then scribe.info("EVERYTHING IS READY!!!")
-    else throw new ExceptionInInitializerError()
+    if QueueManager.initialized && WorkerManager.initialized then
+      scribe.info("Everything is ready")
+    else
+      throw ExceptionInInitializerError()
+    end if
   end init
 end Config

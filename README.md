@@ -73,10 +73,6 @@ case class Message(
 - [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)
 - [MiniMQ](https://github.com/Mr-Hades1/minimq)
 
-## Acknowledge
-- Thanks to JetBrains for providing free IntelliJ IDEA IDE licenses for open source projects
-  <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" height="100px">
-
 ## LICENSE
 The MIT License (MIT)
 
