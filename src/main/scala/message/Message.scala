@@ -6,8 +6,7 @@ package message
 /// General messages from the producer:
 ///     { type: 1, content: "message content", extend: "routing key" }
 case class Message(
-    typ: Int,
-    content: String,
+    typ: Int, content: String,
 
     /// If type is 0, extend is the queueName from the consumer, specifying which queue to connect to.
     /// If type is 1, extend is the routingKey from the producer

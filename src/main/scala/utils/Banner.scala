@@ -1,13 +1,13 @@
 package utils
 
 import com.typesafe.scalalogging.Logger
-import scala.Console._
+import scala.Console.*
 import scala.io.Source
 
-object Banner {
-    private val log = Logger(getClass)
+object Banner:
+  private val log = Logger(getClass)
 
-    private val banner = """
+  private val banner = """
           :::    :::        :::        ::::    :::      :::   :::      :::::::: 
          :+:    :+:      :+: :+:      :+:+:   :+:     :+:+: :+:+:    :+:    :+: 
         +:+    +:+     +:+   +:+     :+:+:+  +:+    +:+ +:+:+ +:+   +:+    +:+  
@@ -21,22 +21,13 @@ object Banner {
         o- Copyright (c) 2022 Muqiu Han
     """
 
-    def load(): Unit = {
-        println()
+  def load(): Unit =
+    println()
 
-        System.getProperty("os.name") match {
-            case "Linux" | "Macos" =>
-                println(
-                  banner
-                      .split("\n")
-                      .mkString("\u001b[38;5;10m", "\n", "\u001b[0m")
-                )
+    System.getProperty("os.name") match
+      case "Linux" | "Macos" => println(banner.split("\n").mkString("\u001b[38;5;10m", "\n", "\u001b[0m"))
 
-            case "Windows" =>
-                println(
-                  banner.split("\n").mkString("\n")
-                )
-        }
-
-    }
-}
+      case "Windows" => println(banner.split("\n").mkString("\n"))
+    end match
+  end load
+end Banner

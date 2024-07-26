@@ -8,20 +8,16 @@ import scala.collection.mutable
 /// the message queue can be persistent and the thread that put the message into the queue will be
 /// blocked when the message is full (this is something that the author has long thought about in the design).
 /// Therefore, LinkedBlockingQueue is used as the core implementation of queue.
-class MessageQueue(_bindingKey: String, _name: String)
-    extends LinkedBlockingQueue[String] {
+class MessageQueue(_bindingKey: String, _name: String) extends LinkedBlockingQueue[String]:
 
-    /// All worker threads working on the current queue
-    private val _workers = new mutable.Queue[Thread]()
+  /// All worker threads working on the current queue
+  private val _workers = new mutable.Queue[Thread]()
 
-    def bindingKey: String = _bindingKey
+  def bindingKey: String = _bindingKey
 
-    def name: String = _name
+  def name: String = _name
 
-    def workers: mutable.Queue[Thread] = _workers
+  def workers: mutable.Queue[Thread] = _workers
 
-    override def toString: String = {
-        s"MessageQueue(bindingKey = '${bindingKey}', name = '${name}', elements = ${super.toString}"
-    }
-
-}
+  override def toString: String = s"MessageQueue(bindingKey = '${bindingKey}', name = '${name}', elements = ${super.toString}"
+end MessageQueue
