@@ -39,6 +39,5 @@ build/
 
 /.idea
 /.bsp
-/project
 /.bloop
 /.metals

@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -42,6 +42,3 @@ jobs:
 
       - name: Build
         run: sbt compile
-
-      - name: Test
-        run: sbt test

@@ -6,7 +6,7 @@
 
 ![Scala 3.4.2](https://img.shields.io/badge/Scala3.3.0-%23DC322F)
 
-![Build and Run](https://github.com/muqiuhan/HanMQ/actions/workflows/BuildAndTest.yaml/badge.svg)
+![Build](https://github.com/muqiuhan/HanMQ/actions/workflows/BuildAndTest.yaml/badge.svg)
 
 <img src="./.github/demo.png">
 

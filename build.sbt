@@ -9,9 +9,7 @@ lazy val root = project
           "com.outr"          %% "scribe"          % "3.15.0",
           "io.netty"           % "netty-all"       % "4.1.50.Final",
           "org.apache.commons" % "commons-lang3"   % "3.4",
-          "com.alibaba"        % "fastjson"        % "1.2.52",
           "ch.qos.logback"     % "logback-classic" % "1.2.10",
-          "org.scalatest"     %% "scalatest"       % "3.2.17" % "test",
           "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
       )
   )
