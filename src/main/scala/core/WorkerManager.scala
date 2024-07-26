@@ -35,10 +35,8 @@ object WorkerManager extends CheckInitialized:
 end WorkerManager
 
 /// Continuously obtain messages in the queue and forward them to the corresponding channel.
-case class Task(id: Int) extends Runnable:
-  private var _queue: Option[MessageQueue] = None
-
-  inline def queue: MessageQueue = _queue.get
+case class Task(index: Int) extends Runnable:
+  private val queue: MessageQueue = QueueManager.get(index)
 
   override def run(): Unit =
     scribe.info(s"worker thread of queue ${queue.name} is working")
