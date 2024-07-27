@@ -1,4 +1,4 @@
-package utils
+package com.muqiuhan.hanmq.utils
 
 import scala.util.boundary, boundary.break
 

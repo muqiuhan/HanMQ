@@ -1,4 +1,4 @@
-package server
+package com.muqiuhan.hanmq.server
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.Channel
@@ -6,9 +6,7 @@ import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
-
-import server.ServerInitializer
-import config.Config
+import com.muqiuhan.hanmq.config.Config
 
 /** Netty server main class, responsible for initializing nio thread groups and binding initializers */
 object Server:
@@ -23,7 +21,7 @@ object Server:
 
   def start(): Unit =
     try
-      utils.Banner.load()
+      com.muqiuhan.hanmq.utils.Banner.load()
       Config()
       val channel = server.bind(9993).sync().channel()
       scribe.info("Server start successfully!")

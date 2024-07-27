@@ -1,4 +1,4 @@
-package utils
+package com.muqiuhan.hanmq.utils
 
 class CheckInitialized:
   private var _initialized = false

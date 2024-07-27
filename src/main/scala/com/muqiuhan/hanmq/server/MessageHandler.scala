@@ -1,4 +1,4 @@
-package server
+package com.muqiuhan.hanmq.server
 
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
@@ -9,9 +9,9 @@ import io.netty.channel.group.DefaultChannelGroup
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.util.concurrent.GlobalEventExecutor
 import scala.collection.mutable.Queue
-import message.Message
-import core.BasicMap
-import core.QueueManager
+import com.muqiuhan.hanmq.message.Message
+import com.muqiuhan.hanmq.core.BasicMap
+import com.muqiuhan.hanmq.core.QueueManager
 import upickle.default.*
 import scala.util.{Try, Failure, Success}
 

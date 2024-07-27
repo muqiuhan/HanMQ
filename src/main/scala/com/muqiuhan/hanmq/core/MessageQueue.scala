@@ -1,4 +1,4 @@
-package core
+package com.muqiuhan.hanmq.core
 
 import java.util.concurrent.LinkedBlockingQueue
 import scala.collection.mutable.{HashMap, Queue}

@@ -1,6 +1,7 @@
-import client.*
+import com.muqiuhan.hanmq.client.{Producer, Consumer}
+
 import java.net.URI
-import server.Server
+import com.muqiuhan.hanmq.server.Server
 
 class TestClient extends munit.FunSuite:
   val url = "ws://localhost:9993/";
@@ -15,7 +16,7 @@ class TestClient extends munit.FunSuite:
 
     producer1.send("Make America Great Again!", "American.great.again.!");
     producer2.send("China is getting stronger!", "China.daily.com");
-    producer2.send("中国建党一百年万岁", "China.xinhua.net");
+    producer2.send("China sees 14.3 percent more domestic trips in H1", "China.xinhua.net");
     producer3.send("The voice from Europe", "UK.Reuters.com");
 
     consumer1.register("American", true);

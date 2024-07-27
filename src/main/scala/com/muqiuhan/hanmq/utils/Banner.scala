@@ -1,4 +1,4 @@
-package utils
+package com.muqiuhan.hanmq.utils
 
 import scala.Console.*
 import scala.io.Source

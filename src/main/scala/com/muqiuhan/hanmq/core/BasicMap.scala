@@ -1,9 +1,9 @@
-package core
+package com.muqiuhan.hanmq.core
 
 import io.netty.channel.ChannelId
 import io.netty.channel.group.{ChannelGroup, DefaultChannelGroup}
 import java.util.concurrent.ConcurrentHashMap
-import server.MessageHandler
+import com.muqiuhan.hanmq.server.MessageHandler
 import scala.collection.mutable.Queue
 
 /** Used to manage the basic mapping relationships in message queues

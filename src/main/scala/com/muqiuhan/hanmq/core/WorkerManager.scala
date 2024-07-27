@@ -1,11 +1,11 @@
-package core
+package com.muqiuhan.hanmq.core
 
 import io.netty.channel.Channel
 import io.netty.channel.ChannelId
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import upickle.default.*
 import scala.collection.mutable
-import utils.CheckInitialized
+import com.muqiuhan.hanmq.utils.CheckInitialized
 import scala.util.{Try, Failure, Success}
 import java.util.ArrayList
 

@@ -1,7 +1,7 @@
-package core
+package com.muqiuhan.hanmq.core
 
-import utils.KeyUtils
-import utils.CheckInitialized
+import com.muqiuhan.hanmq.utils.KeyUtils
+import com.muqiuhan.hanmq.utils.CheckInitialized
 import scala.util.{Try, Failure, Success}
 import scala.collection.mutable.{HashMap, Queue}
 

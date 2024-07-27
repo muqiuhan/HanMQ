@@ -1,8 +1,8 @@
-package config
+package com.muqiuhan.hanmq.config
 
 import java.util.Properties
-import core.QueueManager
-import core.WorkerManager
+import com.muqiuhan.hanmq.core.QueueManager
+import com.muqiuhan.hanmq.core.WorkerManager
 import scala.util.{Try, Success, Failure}
 
 object Config:

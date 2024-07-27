@@ -1,4 +1,4 @@
-package utils
+package com.muqiuhan.hanmq.utils
 
 import java.text.SimpleDateFormat
 import java.util
