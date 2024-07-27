@@ -2,10 +2,8 @@ package core
 
 import io.netty.channel.ChannelId
 import io.netty.channel.group.{ChannelGroup, DefaultChannelGroup}
-
 import java.util.concurrent.ConcurrentHashMap
-import scala.collection.mutable
-import server.MessageHandler
+import java.util.ArrayList
 import server.MessageHandler
 
 /** Used to manage the basic mapping relationships in message queues
@@ -15,7 +13,7 @@ object BasicMap:
 
   /** The name and channelId of the queue.
     * Facilitate the distribution thread to forward to the corresponding subscription consumer. */
-  val queueConsumerMap = new ConcurrentHashMap[String, mutable.Queue[ChannelId]]()
+  val queueConsumerMap = new ConcurrentHashMap[String, ArrayList[ChannelId]]()
 
   /** Used to record and manage all client channels, and can automatically remove disconnected sessions */
   val clients: DefaultChannelGroup = MessageHandler.clients
