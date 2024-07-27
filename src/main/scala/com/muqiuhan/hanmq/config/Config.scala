@@ -7,13 +7,13 @@ import scala.util.{Try, Success, Failure}
 
 object Config:
 
-  def apply() =
+  def init() =
     Try(load()) match
       case Failure(e) =>
         scribe.error("Can't not find Config.properties or the format is wrong.")
         throw new RuntimeException("Can't not find Config.properties or the format is wrong.")
       case _ => ()
-  end apply
+  end init
 
   private def load(): Unit =
     val config = new Properties()

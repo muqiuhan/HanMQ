@@ -6,7 +6,9 @@ import io.netty.channel.ChannelFuture
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import com.muqiuhan.hanmq.config.Config
+import scala.util.Try
+import scala.util.Failure
+import scala.util.Success
 
 /** Netty server main class, responsible for initializing nio thread groups and binding initializers */
 object Server:
@@ -19,20 +21,38 @@ object Server:
       .channel(classOf[NioServerSocketChannel])
       .childHandler(new ServerInitializer())
 
+  private def init: Channel =
+    com.muqiuhan.hanmq.utils.Banner.load()
+
+    scribe.info("load config")
+    com.muqiuhan.hanmq.config.Config.init()
+
+    scribe.info("start server")
+    server.bind(9993).sync().channel()
+  end init
+
+  private def shutdownGracefully: Unit =
+    scribe.info("shutdown server")
+    mainGroup.shutdownGracefully()
+    subGroup.shutdownGracefully()
+  end shutdownGracefully
+
+  private implicit class CleanupThrowable(e: Throwable):
+    inline def printStackTraceWithLogAndCleanup(): Unit =
+      shutdownGracefully
+      scribe.error(s"server error: ${e}")
+      e.printStackTrace()
+    end printStackTraceWithLogAndCleanup
+  end CleanupThrowable
+
+  private implicit class CleanupChannelFeature(channelFuture: ChannelFuture):
+    inline def cleanup: Unit = shutdownGracefully
+
   def start(): Unit =
-    try
-      com.muqiuhan.hanmq.utils.Banner.load()
-      Config()
-      val channel = server.bind(9993).sync().channel()
-      scribe.info("Server start successfully!")
-      channel.closeFuture().sync()
-    catch
-      case e: Exception =>
-        scribe.error(s"Server error: ${e}")
-        e.printStackTrace()
-    finally
-      mainGroup.shutdownGracefully()
-      subGroup.shutdownGracefully()
+    Try(init) match
+      case Failure(e)       => e.printStackTraceWithLogAndCleanup()
+      case Success(channel) => channel.closeFuture().sync().cleanup
+    end match
   end start
 
 end Server
