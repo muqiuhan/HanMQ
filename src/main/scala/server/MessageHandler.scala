@@ -14,6 +14,7 @@ import core.BasicMap
 import core.QueueManager
 import upickle.default.*
 import scala.util.{Try, Failure, Success}
+import java.util.ArrayList
 
 /** Key components in Netty, handling messages from clients */
 class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
@@ -40,26 +41,31 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
   end channelRead0
 
   private def processConsumerMessage(channel: Channel, message: Message): Unit =
-    val map = BasicMap.queueConsumerMap
-
     for queueName <- read[List[String]](message.extend) do
       // queue has not been registered by any consumer before
-      if !map.containsKey(queueName) then map.put(queueName, mutable.Queue(channel.id()))
-      else map.get(queueName).addOne(channel.id())
+      if !BasicMap.queueConsumerMap.containsKey(queueName) then
+        val channelIds = new ArrayList[ChannelId]()
+        channelIds.add(channel.id())
+        BasicMap.queueConsumerMap.put(queueName, channelIds)
+      else
+        BasicMap.queueConsumerMap.get(queueName).add(channel.id())
+      end if
 
       QueueManager.signal(queueName)
     end for
   end processConsumerMessage
 
   private inline def processProducerMessage(message: Message): Unit =
-    QueueManager.put(message.content, message.content)
+    QueueManager.put(message.content, message.extend)
 
   private def wrongMessageFormat(channel: Channel, data: String): Unit =
     scribe.error(s"Wrong message format: ${data}")
-    channel.writeAndFlush(new TextWebSocketFrame("Wrong message format")).addListener(future =>
-      channel.close()
-      scribe.info("channel removed successfully")
-    )
+    channel
+      .writeAndFlush(new TextWebSocketFrame("Wrong message format"))
+      .addListener(future =>
+        channel.close()
+        scribe.info("channel removed successfully")
+      )
   end wrongMessageFormat
 
   override inline def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable): Unit =

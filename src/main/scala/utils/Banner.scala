@@ -15,8 +15,8 @@ object Banner:
     ###    ###    ###     ###    ###    ####    ###       ###    ###########
 
         o- Github : https://github.com/muqiuhan/HanMQ
-        o- Version: 0.0.1
-        o- Copyright (c) 2022 Muqiu Han
+        o- Version: 0.1.0
+        o- Copyright (c) 2023 - 2024 Muqiu Han
     """
 
   def load(): Unit =

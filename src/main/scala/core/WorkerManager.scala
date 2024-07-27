@@ -7,11 +7,12 @@ import upickle.default.*
 import scala.collection.mutable
 import utils.CheckInitialized
 import scala.util.{Try, Failure, Success}
+import java.util.ArrayList
 
 /** Create and manage worker threads and distribute messages to consumers.
   * The worker thread will be set as a daemon thread */
 object WorkerManager extends CheckInitialized:
-  private val threads = new mutable.Queue[Thread]()
+  private val threads = new ArrayList[Thread]()
 
   def init(threadNum: Int): Unit =
     if initialized then return
@@ -19,7 +20,7 @@ object WorkerManager extends CheckInitialized:
     synchronized {
       if initialized then return
 
-      for i <- 0 until threadNum do threads.addOne(initThread(i))
+      for i <- 0 until threadNum do threads.add(initThread(i))
 
       scribe.info(s"${threadNum} worker threads are started.")
       initialize()
@@ -28,7 +29,7 @@ object WorkerManager extends CheckInitialized:
 
   private def initThread(id: Int): Thread =
     val thread = new Thread(new Task(id), s"worker-${id}")
-    QueueManager.get(id).workers.addOne(thread)
+    QueueManager.get(id).workers.add(thread)
     thread.setDaemon(true)
     thread.start()
     thread
@@ -44,24 +45,21 @@ case class Task(index: Int) extends Runnable:
     val channelIds = BasicMap.queueConsumerMap.get(queue.name)
 
     while queue == null || channelIds.isEmpty do
-      Try(Thread.sleep(Long.MaxValue)) match
-        case Failure(e: InterruptedException) => scribe.warn(e.getMessage)
-        case Failure(e)                       => throw e
-        case _                                => scribe.info("No consumers, sleeping...")
+      scribe.info("No consumers, sleeping...")
+      Thread.sleep(Long.MaxValue)
     end while
 
-    for channelId <- channelIds do
+    channelIds.forEach(channelId =>
       BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(write(message)))
+    )
   end work
 
   override def run(): Unit =
     scribe.info(s"worker thread of queue ${queue.name} is working")
 
     while true do
-      Try(work()) match
-        case Failure(e: InterruptedException) => ()
-        case Failure(e)                       => throw e
-        case _                                => ()
+      try work()
+      catch case e: InterruptedException => ()
     end while
   end run
 end Task
