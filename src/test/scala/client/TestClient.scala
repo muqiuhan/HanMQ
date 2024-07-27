@@ -1,7 +1,6 @@
 import com.muqiuhan.hanmq.client.{Producer, Consumer}
 
 import java.net.URI
-import com.muqiuhan.hanmq.server.Server
 
 class TestClient extends munit.FunSuite:
   val url = "ws://localhost:9993/";

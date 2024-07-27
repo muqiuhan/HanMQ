@@ -4,9 +4,9 @@
 
 *A simple message queue based on netty, complete routing distribution using basic topic mode and written in Scala3*
 
-![Scala 3.4.2](https://img.shields.io/badge/Scala3.3.0-%23DC322F)
+![Scala 3.4.2](https://img.shields.io/badge/Scala3.4.2-%23DC322F)
 
-![Build](https://github.com/muqiuhan/HanMQ/actions/workflows/BuildAndTest.yaml/badge.svg)
+[![Build](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml/badge.svg)](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml)
 
 <img src="./.github/demo.png">
 
@@ -47,24 +47,80 @@ case class Message(
 )
 ```
 
-## Build & Test & Run
+## Usage
 
-`sbt run` then `sbt test`
+server:
+```scala 3
+@main
+def main: Unit =
+  com.muqiuhan.hanmq.server.Server.start()
+```
+
+client:
+```scala 3
+import com.muqiuhan.hanmq.client.{Producer, Consumer}
+...
+  val url = "ws://localhost:9993/";
+
+  test("Test client") {
+    val producer1 = new Producer(URI.create(url), "producer_1");
+    val producer2 = new Producer(URI.create(url), "producer_2");
+    val producer3 = new Producer(URI.create(url), "producer_3");
+    val consumer1 = new Consumer(URI.create(url), "American");
+    val consumer2 = new Consumer(URI.create(url), "China");
+    val consumer3 = new Consumer(URI.create(url), "UK");
+
+    producer1.send("Make America Great Again!", "American.great.again.!");
+    producer2.send("China is getting stronger!", "China.daily.com");
+    producer2.send("China sees 14.3 percent more domestic trips in H1", "China.xinhua.net");
+    producer3.send("The voice from Europe", "UK.Reuters.com");
+
+    consumer1.register("American", true);
+    consumer1.onMessage(message => scribe.info("American: " + message));
+    consumer2.register("China", true);
+    consumer2.onMessage(message => scribe.info("China: " + message));
+    consumer3.register("UK", true);
+    consumer3.onMessage(message => scribe.info("UK: " + message));
+...
+```
+
+output:
+```
+2024.07.27 10:25:54:496 WebSocketConnectReadThread-173 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client producer_1 connects successfully    
+2024.07.27 10:25:54:520 WebSocketConnectReadThread-176 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client producer_2 connects successfully    
+2024.07.27 10:25:54:527 WebSocketConnectReadThread-179 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client producer_3 connects successfully    
+2024.07.27 10:25:54:538 WebSocketConnectReadThread-182 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client American connects successfully    
+2024.07.27 10:25:54:544 WebSocketConnectReadThread-185 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client China connects successfully    
+2024.07.27 10:25:54:550 WebSocketConnectReadThread-188 INFO com.muqiuhan.hanmq.client.Client.onOpen:20
+    Client UK connects successfully    
+2024.07.27 10:25:54:636 WebSocketConnectReadThread-185 INFO <empty>.TestClient.TestClient:24
+    China: "China is getting stronger!"    
+2024.07.27 10:25:54:636 WebSocketConnectReadThread-188 INFO <empty>.TestClient.TestClient:26
+    UK: "The voice from Europe"    
+2024.07.27 10:25:54:636 WebSocketConnectReadThread-182 INFO <empty>.TestClient.TestClient:22
+    American: "Make America Great Again!"    
+2024.07.27 10:25:54:636 WebSocketConnectReadThread-185 INFO <empty>.TestClient.TestClient:24
+    China: "China sees 14.3 percent more domestic trips in H1"
+```
 
 ## Dependencies
 
 ```scala 3
 ...
-      libraryDependencies ++= Seq(
-          "com.lihaoyi"       %% "upickle"         % "4.0.0",
-          "com.outr"          %% "scribe"          % "3.15.0",
-          "io.netty"           % "netty-all"       % "4.1.50.Final",
-          "org.apache.commons" % "commons-lang3"   % "3.4",
-          "com.alibaba"        % "fastjson"        % "1.2.52",
-          "ch.qos.logback"     % "logback-classic" % "1.2.10",
-          "org.scalatest"     %% "scalatest"       % "3.2.17" % "test",
-          "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
-      )
+libraryDependencies ++= Seq(
+    "com.lihaoyi"       %% "upickle"         % "4.0.0",
+    "com.outr"          %% "scribe"          % "3.15.0",
+    "org.scalameta"     %% "munit"           % "1.0.0" % Test,
+    "io.netty"           % "netty-all"       % "4.1.50.Final",
+    "org.apache.commons" % "commons-lang3"   % "3.4",
+    "ch.qos.logback"     % "logback-classic" % "1.2.10",
+    "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
+)
 ...
 ```
 
