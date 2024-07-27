@@ -1,8 +1,6 @@
 package utils
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class TestKey extends AnyFunSuite:
+class TestKey extends munit.FunSuite:
   test("item.# shoud match one or more") {
     assert(KeyUtils.routingKeyCompare("item", Data.matchOneOrMore))
 
