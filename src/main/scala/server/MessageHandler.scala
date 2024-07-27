@@ -8,13 +8,12 @@ import io.netty.channel.group.ChannelGroup
 import io.netty.channel.group.DefaultChannelGroup
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.util.concurrent.GlobalEventExecutor
-import scala.collection.mutable
+import scala.collection.mutable.Queue
 import message.Message
 import core.BasicMap
 import core.QueueManager
 import upickle.default.*
 import scala.util.{Try, Failure, Success}
-import java.util.ArrayList
 
 /** Key components in Netty, handling messages from clients */
 class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
@@ -44,11 +43,11 @@ class MessageHandler extends SimpleChannelInboundHandler[TextWebSocketFrame]:
     for queueName <- read[List[String]](message.extend) do
       // queue has not been registered by any consumer before
       if !BasicMap.queueConsumerMap.containsKey(queueName) then
-        val channelIds = new ArrayList[ChannelId]()
-        channelIds.add(channel.id())
+        val channelIds = new Queue[ChannelId]()
+        channelIds.addOne(channel.id())
         BasicMap.queueConsumerMap.put(queueName, channelIds)
       else
-        BasicMap.queueConsumerMap.get(queueName).add(channel.id())
+        BasicMap.queueConsumerMap.get(queueName).addOne(channel.id())
       end if
 
       QueueManager.signal(queueName)

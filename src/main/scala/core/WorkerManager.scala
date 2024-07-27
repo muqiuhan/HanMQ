@@ -29,7 +29,7 @@ object WorkerManager extends CheckInitialized:
 
   private def initThread(id: Int): Thread =
     val thread = new Thread(new Task(id), s"worker-${id}")
-    QueueManager.get(id).workers.add(thread)
+    QueueManager.get(id).workers.addOne(thread)
     thread.setDaemon(true)
     thread.start()
     thread
@@ -49,7 +49,7 @@ case class Task(index: Int) extends Runnable:
       Thread.sleep(Long.MaxValue)
     end while
 
-    channelIds.forEach(channelId =>
+    channelIds.foreach(channelId =>
       BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(write(message)))
     )
   end work
