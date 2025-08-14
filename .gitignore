@@ -41,3 +41,4 @@ build/
 /.bsp
 /.bloop
 /.metals
+/project
