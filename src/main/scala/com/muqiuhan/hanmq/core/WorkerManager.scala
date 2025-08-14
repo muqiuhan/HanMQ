@@ -41,17 +41,16 @@ case class Task(index: Int) extends Runnable:
   private val queue: MessageQueue = QueueManager.get(index)
 
   private def work(): Unit =
-    val message    = queue.take()
-    val channelIds = BasicMap.queueConsumerMap.get(queue.name)
+    val message = queue.take()
+    // ConcurrentHashMap.get returns null if the key is not found.
+    val channelIds: mutable.Queue[ChannelId] = BasicMap.queueConsumerMap.get(queue.name)
 
-    while queue == null || channelIds.isEmpty do
-      scribe.info("No consumers, sleeping...")
-      Thread.sleep(Long.MaxValue)
-    end while
-
-    channelIds.foreach(channelId =>
-      BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(write(message)))
-    )
+    // If channelIds is not null and not empty, then proceed to send messages.
+    if channelIds != null && channelIds.nonEmpty then
+      channelIds.foreach(channelId =>
+        BasicMap.clients.find(channelId).writeAndFlush(new TextWebSocketFrame(write(message)))
+      )
+    end if
   end work
 
   override def run(): Unit =

@@ -16,18 +16,28 @@ object Config:
   end init
 
   private def load(): Unit =
-    val config = new Properties()
-    config.load(getClass().getClassLoader().getResourceAsStream("config.properties"))
+    scribe.info("Loading configuration...")
+    val config       = new Properties()
+    val configStream = getClass().getClassLoader().getResourceAsStream("config.properties")
 
-    Try(init(Integer.parseInt(config.get("queueNum").asInstanceOf[String]),
-            config.get("bindingKeys").asInstanceOf[String].split(",\\s+"),
-            Some(config.get("queueNames").asInstanceOf[String].split(",\\s+")))) match
-      case Failure(e) =>
-        scribe.warn("Not found queueNames definition, use default naming strategy.");
-        init(Integer.parseInt(config.get("queueNum").asInstanceOf[String]),
-            config.get("bindingKeys").asInstanceOf[String].split(",\\s+"), None)
-      case _ => ()
-    end match
+    if configStream == null then
+      scribe.error("Cannot find config.properties in classpath")
+      throw new RuntimeException("Cannot find config.properties in classpath")
+    else
+      config.load(configStream)
+      scribe.info(s"Configuration loaded: queueNum=${config.get("queueNum")}, bindingKeys=${config.get(
+                "bindingKeys")}, queueNames=${config.get("queueNames")}")
+
+      Try(init(Integer.parseInt(config.get("queueNum").asInstanceOf[String]),
+              config.get("bindingKeys").asInstanceOf[String].split(",\\s+"),
+              Some(config.get("queueNames").asInstanceOf[String].split(",\\s+")))) match
+        case Failure(e) =>
+          scribe.warn("Not found queueNames definition, use default naming strategy.");
+          init(Integer.parseInt(config.get("queueNum").asInstanceOf[String]),
+              config.get("bindingKeys").asInstanceOf[String].split(",\\s+"), None)
+        case _ => ()
+      end match
+    end if
   end load
 
   private def init(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =

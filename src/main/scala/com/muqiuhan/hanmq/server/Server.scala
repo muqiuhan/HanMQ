@@ -28,7 +28,10 @@ object Server:
     com.muqiuhan.hanmq.config.Config.init()
 
     scribe.info("start server")
-    server.bind(9993).sync().channel()
+    scribe.info("Binding to port 1221...")
+    val channel = server.bind(1221).sync().channel()
+    scribe.info(s"Server started successfully on port 1221, channel: ${channel}")
+    channel
   end init
 
   private def shutdownGracefully: Unit =
