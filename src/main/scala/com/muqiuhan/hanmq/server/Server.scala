@@ -1,61 +1,97 @@
 package com.muqiuhan.hanmq.server
 
-import io.netty.bootstrap.ServerBootstrap
-import io.netty.channel.Channel
-import io.netty.channel.ChannelFuture
-import io.netty.channel.EventLoopGroup
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.nio.NioServerSocketChannel
+import com.muqiuhan.hanmq.core.{BasicMap, QueueManager}
+import com.muqiuhan.hanmq.legacy.message.Message
+import zio.*
+import zio.http.*
+import zio.http.ChannelEvent.*
+import zio.http.Server as ZIOHttpServer
 import scala.util.Try
-import scala.util.Failure
-import scala.util.Success
+import scala.collection.mutable.Queue
+import upickle.default as Upickle
+import com.muqiuhan.hanmq.legacy.utils.Banner
+import com.muqiuhan.hanmq.legacy.config.Config
 
-/** Netty server main class, responsible for initializing nio thread groups and binding initializers */
-object Server:
-  private val mainGroup = new NioEventLoopGroup()
-  private val subGroup  = new NioEventLoopGroup()
+object Server extends ZIOAppDefault:
 
+  private def route(data: String, channel: WebSocketChannel): Task[Unit] =
+    ZIO.attempt {
+      val message = Upickle.read[Message](data)
+      message.typ match
+        case 0 /* Subscription */ => processConsumerMessage(channel, message)
+        case 1 /* Producer */     => processProducerMessage(message)
+        case typ: Int             => throw new Exception(s"Unknown message type: $typ")
+      end match
+    }
+
+  private def processConsumerMessage(channel: WebSocketChannel, message: Message): Unit =
+    for queueName <- Upickle.read[List[String]](message.extend) do
+      if !BasicMap.queueConsumerMap.containsKey(queueName) then
+        val channels = new Queue[WebSocketChannel]()
+        channels.addOne(channel)
+        BasicMap.queueConsumerMap.put(queueName, channels)
+      else
+        BasicMap.queueConsumerMap.get(queueName).addOne(channel)
+      end if
+      QueueManager.signal(queueName)
+    end for
+  end processConsumerMessage
+
+  private inline def processProducerMessage(message: Message): Unit =
+    QueueManager.put(message.content, message.extend)
+
+  private def wrongMessageFormat(channel: WebSocketChannel, data: String): UIO[Unit] =
+    for
+      _ <- ZIO.succeed(scribe.error(s"Wrong message format: $data"))
+      _ <- channel.send(Read(WebSocketFrame.text("Wrong message format"))).orDie
+      _ <- channel.shutdown
+    yield ()
+
+  private def handleDisconnect(channel: WebSocketChannel): UIO[Unit] =
+    ZIO.succeed {
+      BasicMap.queueConsumerMap.forEach((_, channels) => channels.filterInPlace(_ != channel))
+    }
+
+  private val websocketApp: WebSocketApp[Any] =
+    Handler.webSocket { channel =>
+      channel.receiveAll {
+        case UserEventTriggered(UserEvent.HandshakeComplete) =>
+          ZIO.succeed(scribe.info(s"Client connected on $channel"))
+
+        case Read(WebSocketFrame.Close(status, reason)) =>
+          for
+            _ <- ZIO.succeed(scribe.info(s"Client disconnected with status $status and reason $reason on $channel"))
+            _ <- handleDisconnect(channel)
+          yield ()
+
+        case ExceptionCaught(cause) =>
+          for
+            _ <- ZIO.succeed(scribe.error(s"Exception caught on $channel", cause))
+            _ <- handleDisconnect(channel)
+          yield ()
+
+        case Read(WebSocketFrame.Text(data)) =>
+          route(data, channel).catchAll {
+            case e: upickle.core.AbortException => wrongMessageFormat(channel, data)
+            case e                              => ZIO.succeed(scribe.error(s"Error processing message: ${e.getMessage}"))
+          }
+
+        case _ => ZIO.unit
+      }
+    }
+
+  private val routes = Routes(Method.GET / "ws" -> handler(websocketApp.toResponse))
   private val server =
-    new ServerBootstrap()
-      .group(mainGroup, subGroup)
-      .channel(classOf[NioServerSocketChannel])
-      .childHandler(new ServerInitializer())
+    for
+      runtime <- ZIO.runtime[Any]
+      _       <- ZIO.succeed { QueueManager.runtime = runtime }
+      _       <- ZIOHttpServer.serve(routes).provide(ZIOHttpServer.default)
+    yield ()
 
-  private def init: Channel =
-    com.muqiuhan.hanmq.utils.Banner.load()
-
-    scribe.info("load config")
-    com.muqiuhan.hanmq.config.Config.init()
-
-    scribe.info("start server")
-    scribe.info("Binding to port 1221...")
-    val channel = server.bind(1221).sync().channel()
-    scribe.info(s"Server started successfully on port 1221, channel: ${channel}")
-    channel
-  end init
-
-  private def shutdownGracefully: Unit =
-    scribe.info("shutdown server")
-    mainGroup.shutdownGracefully()
-    subGroup.shutdownGracefully()
-  end shutdownGracefully
-
-  private implicit class CleanupThrowable(e: Throwable):
-    inline def printStackTraceWithLogAndCleanup(): Unit =
-      shutdownGracefully
-      scribe.error(s"server error: ${e}")
-      e.printStackTrace()
-    end printStackTraceWithLogAndCleanup
-  end CleanupThrowable
-
-  private implicit class CleanupChannelFeature(channelFuture: ChannelFuture):
-    inline def cleanup: Unit = shutdownGracefully
-
-  def start(): Unit =
-    Try(init) match
-      case Failure(e)       => e.printStackTraceWithLogAndCleanup()
-      case Success(channel) => channel.closeFuture().sync().cleanup
-    end match
-  end start
+  override def run: ZIO[Any & (ZIOAppArgs & Scope), Any, Any] =
+    ZIO.attempt {
+      Banner.load()
+      Config.init()
+    } *> server
 
 end Server

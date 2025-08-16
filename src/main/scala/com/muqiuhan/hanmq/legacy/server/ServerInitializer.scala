@@ -1,4 +1,4 @@
-package com.muqiuhan.hanmq.server
+package com.muqiuhan.hanmq.legacy.server
 
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelPipeline

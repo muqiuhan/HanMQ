@@ -1,95 +1,53 @@
 package com.muqiuhan.hanmq.core
 
-import com.muqiuhan.hanmq.utils.KeyUtils
-import com.muqiuhan.hanmq.utils.CheckInitialized
-import scala.util.{Try, Failure, Success}
-import scala.collection.mutable.{HashMap, Queue}
+import zio.http.WebSocketFrame
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.LinkedBlockingQueue
+import zio.{Runtime, Unsafe}
+import zio.http.ChannelEvent.Read
 
-/** Initialize the creation and management of all queues,
-  * and provide functions such as placing messages, obtaining specific queues,
-  * and awakening worker threads sleeping on queues */
-object QueueManager extends CheckInitialized:
-  private val queues   = new Queue[MessageQueue]()
-  private val queueMap = new HashMap[String, MessageQueue]()
+object QueueManager:
 
-  inline def init(queueNum: Int, bindingKeys: Array[String]): Unit = initWithQueueNames(queueNum, bindingKeys, None)
+  private val messageQueues = new ConcurrentHashMap[String, LinkedBlockingQueue[String]]()
+  private val workers       = new ConcurrentHashMap[String, Thread]()
+  // The ZIO runtime will be set from the main application
+  var runtime: Runtime[Any] = null
 
-  def init(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
-    if initialized then return
+  def add(name: String): Unit =
+    if !messageQueues.containsKey(name) then
+      messageQueues.put(name, new LinkedBlockingQueue[String]())
+      scribe.info(s"Created queue: $name")
+      val worker = new Thread(() =>
+        scribe.info(s"Worker thread started for queue: $name")
+        while true do
+          val message = messageQueues.get(name).take()
+          scribe.debug(s"Worker thread for queue $name received message: $message")
+          val consumers = BasicMap.queueConsumerMap.get(name)
+          scribe.debug(s"Found ${if consumers != null then consumers.size else 0} consumers for queue: $name")
+          if consumers != null then
+            consumers.foreach(channel =>
+              if runtime != null then
+                Unsafe.unsafe { implicit unsafe =>
+                  runtime.unsafe.run(channel.send(Read(WebSocketFrame.text(message)))).getOrThrowFiberFailure()
+                }
+              else
+                scribe.error("QueueManager runtime not initialized!")
+            )
+          else
+            scribe.warn(s"No consumers found for queue: $name")
+          end if
+        end while
+      )
+      worker.start()
+      workers.put(name, worker)
+    end if
+  end add
 
-    synchronized {
-      // double check
-      if initialized then return
-      if bindingKeys.length != queueNum then
-        scribe.error("The length of bindingKeys not equal to queueNum.")
-        throw ExceptionInInitializerError()
-      else
-        initWithQueueNames(queueNum, bindingKeys, queueNames)
-        initialize()
-      end if
-    }
-  end init
-
-  def put(message: String, routingKey: String): Unit =
-    checkInitialized()
-
-    queues.foreach(queue =>
-      if KeyUtils.routingKeyCompare(routingKey, queue.bindingKey) then
-        Try(queue.put(message)) match
-          case Failure(e: InterruptedException) => ()
-          case Failure(e)                       => throw e
-          case _                                => ()
-    )
+  def put(message: String, queueName: String): Unit =
+    add(queueName)
+    messageQueues.get(queueName).put(message)
   end put
 
-  inline def get(index: Int): MessageQueue =
-    checkInitialized()
-    queues(index)
-  end get
-
-  inline def contains(name: String): Boolean =
-    checkInitialized()
-    queueMap.contains(name)
-  end contains
-
-  /** Wake up a thread waiting on a queue */
-  inline def signal(queueName: String): Unit = queueMap(queueName).workers.foreach(_.interrupt())
-
-  private def initWithQueueNames(queueNum: Int, bindingKeys: Array[String], queueNames: Option[Array[String]]): Unit =
-    // Make sure there are no duplicate names.
-    // If so, slightly modify the original name (name + id)
-    val nameChooser = new HashMap[String, Int]()
-
-    for i <- 0 until queueNum do
-      if queueNames.isEmpty || i >= queueNames.get.length then
-        queues.addOne(new MessageQueue(bindingKeys(i), s"queue_${i}"))
-      else
-        queueNames match
-          case None => throw ExceptionInInitializerError()
-          case Some(queueNames) => initWhenQueueNamesIsNotEmpty(queueNames(i), nameChooser, bindingKeys(i)) match
-              case Some(name, queue) =>
-                queues.addOne(queue)
-                queueMap.put(name, queue)
-              case None => throw ExceptionInInitializerError()
-        end match
-    end for
-  end initWithQueueNames
-
-  private def initWhenQueueNamesIsNotEmpty(
-      name: String, nameChooser: HashMap[String, Int], bindingKey: String
-  ): Option[(String, MessageQueue)] =
-    if nameChooser.contains(name) then
-      nameChooser.get(name).map(old =>
-        val newName = s"${name}${old}"
-        scribe.warn(s"A duplicated queue queueNames ${name} is modified to ${newName}")
-
-        nameChooser.put(name, old + 1)
-        (name, new MessageQueue(bindingKey, newName))
-      )
-    else
-      nameChooser.put(name, 1)
-      Some(name, new MessageQueue(bindingKey, name))
-    end if
-  end initWhenQueueNamesIsNotEmpty
+  inline def signal(queueName: String): Unit = add(queueName)
 
 end QueueManager

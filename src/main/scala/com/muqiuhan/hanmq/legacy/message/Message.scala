@@ -1,4 +1,4 @@
-package com.muqiuhan.hanmq.message
+package com.muqiuhan.hanmq.legacy.message
 
 import upickle.default.*
 

@@ -1,9 +1,9 @@
-import com.muqiuhan.hanmq.client.{Producer, Consumer}
+import com.muqiuhan.hanmq.legacy.client.{Producer, Consumer}
 
 import java.net.URI
 
 class TestClient extends munit.FunSuite:
-  val url = "ws://localhost:1221/ws";
+  val url = "ws://localhost:8080/ws";
 
   test("Test client") {
     val producer1 = new Producer(URI.create(url), "producer_1");

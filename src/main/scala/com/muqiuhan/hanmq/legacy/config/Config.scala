@@ -1,18 +1,20 @@
-package com.muqiuhan.hanmq.config
+package com.muqiuhan.hanmq.legacy.config
 
 import java.util.Properties
-import com.muqiuhan.hanmq.core.QueueManager
-import com.muqiuhan.hanmq.core.WorkerManager
+import com.muqiuhan.hanmq.legacy.core.QueueManager
+import com.muqiuhan.hanmq.legacy.core.WorkerManager
 import scala.util.{Try, Success, Failure}
 
 object Config:
 
   def init() =
+    scribe.info("loading config")
     Try(load()) match
       case Failure(e) =>
         scribe.error("Can't not find Config.properties or the format is wrong.")
         throw new RuntimeException("Can't not find Config.properties or the format is wrong.")
       case _ => ()
+    end match
   end init
 
   private def load(): Unit =

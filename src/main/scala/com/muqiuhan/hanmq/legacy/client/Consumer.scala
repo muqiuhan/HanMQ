@@ -1,9 +1,9 @@
-package com.muqiuhan.hanmq.client
+package com.muqiuhan.hanmq.legacy.client
 
 import java.net.URI
 import scala.collection.mutable
 
-import com.muqiuhan.hanmq.message.Message
+import com.muqiuhan.hanmq.legacy.message.Message
 import scala.util.Try
 import scala.util.Failure
 import scala.util.Success
@@ -25,7 +25,7 @@ class Consumer(serverURI: URI, name: String):
     if !append then registerInfo.clear()
 
     registerInfo.addAll(queueNames)
-    client.send(write(new Message(0, null, write(queueNames), com.muqiuhan.hanmq.utils.Date.getLocalTime())))
+    client.send(write(new Message(0, null, write(queueNames), com.muqiuhan.hanmq.legacy.utils.Date.getLocalTime())))
   end register
 
   inline def register(queueName: String, append: Boolean): Unit     = register(List(queueName), append)

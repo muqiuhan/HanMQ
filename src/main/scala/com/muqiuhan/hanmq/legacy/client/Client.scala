@@ -1,4 +1,4 @@
-package com.muqiuhan.hanmq.client
+package com.muqiuhan.hanmq.legacy.client
 
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake

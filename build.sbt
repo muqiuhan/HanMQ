@@ -11,6 +11,8 @@ lazy val root = project
           "io.netty"           % "netty-all"       % "4.2.4.Final",
           "org.apache.commons" % "commons-lang3"   % "3.4",
           "ch.qos.logback"     % "logback-classic" % "1.2.10",
-          "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
+          "org.java-websocket" % "Java-WebSocket"  % "1.3.8",
+          "dev.zio"           %% "zio"             % "2.1.20",
+          "dev.zio"           %% "zio-http"        % "3.3.3"
       )
   )
