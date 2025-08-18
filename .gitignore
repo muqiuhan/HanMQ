@@ -42,3 +42,5 @@ build/
 /.bloop
 /.metals
 /project
+
+TODO.md
