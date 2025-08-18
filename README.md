@@ -1,14 +1,12 @@
 <div align="center">
 
+<img src="./.github/logo.webp" height="150px">
+
 # HanMQ
 
-*A simple message queue based on netty, complete routing distribution using basic topic mode and written in Scala3*
+*Lightweight message queue based on ZIO and WebSocket* 
 
-![Scala 3.4.2](https://img.shields.io/badge/Scala3.4.2-%23DC322F)
-
-[![Build](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml/badge.svg)](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml)
-
-<img src="./.github/demo.png">
+![Scala 3.7.2](https://img.shields.io/badge/Scala3.7.2-%23DC322F) [![Build](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml/badge.svg)](https://github.com/muqiuhan/HanMQ/actions/workflows/Build.yaml)
 
 </div>
 
@@ -19,12 +17,12 @@ HanMQ communication model is based on RabbitMQ's most basic Topics model:
 
 The message queue is abstracted into Server and Client:
 
-The thread group design of Server is mainly divided into three parts:
-1. Handle network communication module
-2. Put the message from the producer into the corresponding queue
-3. Distribute messages in each queue to consumer
+The original server implementation used Netty directly for low-level network communication and thread management. The current server leverages [ZIO HTTP](https://zio.dev/reference/http/) for a more modern, functional, and asynchronous approach to handle WebSocket connections and message routing. This transition enables:
+1.  **Efficient Concurrency**: ZIO's lightweight fibers replace traditional threads, allowing thousands of concurrent operations with minimal overhead.
+2.  **Resource Safety**: ZIO's `Scope` ensures proper management and release of resources like network connections.
+3.  **Composability**: Building the application from small, testable, and composable ZIO effects.
 
-The basic model is a blocking queue, which implemented using BlockingQueue under the Java J.U.C package.
+The core logic for message handling and queue management is now powered by ZIO's `Ref` and `Queue` primitives within the `BasicMap` and `QueueManager` services, respectively. These services are provided as ZLayers, enabling dependency injection and testability.
 
 HanMQ has customized a simple message protocol. In order to facilitate expansion and take advantage of some existing application layer protocols, the WebSocket protocol is adopted:
 
@@ -53,7 +51,13 @@ server:
 ```scala 3
 @main
 def main: Unit =
-  com.muqiuhan.hanmq.server.Server.start()
+  com.muqiuhan.hanmq.server.Server.run.provide(
+      zio.ZIOAppArgs.empty,
+      zio.Scope.default,
+      com.muqiuhan.hanmq.core.BasicMap.live,
+      com.muqiuhan.hanmq.core.QueueManager.live,
+      zio.http.Server.default
+  ).exitCode.run.currentOrThrow.run.exitCode
 ```
 
 client:
@@ -116,13 +120,57 @@ libraryDependencies ++= Seq(
     "com.lihaoyi"       %% "upickle"         % "4.0.0",
     "com.outr"          %% "scribe"          % "3.15.0",
     "org.scalameta"     %% "munit"           % "1.0.0" % Test,
-    "io.netty"           % "netty-all"       % "4.1.50.Final",
+    "io.netty"           % "netty-all"       % "4.2.4.Final",
     "org.apache.commons" % "commons-lang3"   % "3.4",
     "ch.qos.logback"     % "logback-classic" % "1.2.10",
-    "org.java-websocket" % "Java-WebSocket"  % "1.3.8"
+    "org.java-websocket" % "Java-WebSocket"  % "1.3.8",
+    "dev.zio"           %% "zio"             % "2.1.20",
+    "dev.zio"           %% "zio-http"        % "3.3.3"
 )
 ...
 ```
+
+## Future Work
+
+### Zombie Queue Problem
+
+If a message queue is dynamically created during the application lifecycle and is no longer needed, its corresponding worker `Fiber` continues to run, constantly attempting to `take` messages from a queue that may no longer receive them. This can lead to unnecessary CPU cycles and context switching, constituting a logical resource leak.
+
+### Persistence and Durability
+
+Implement a pluggable persistence layer, this is the most critical feature of a production message queue. Messages must survive broker restarts and failures.
+
+### Protocol and Serialization
+
+The current JSON-based protocol is readable but can be a performance bottleneck.
+
+Use schema-based serialization formats such as [Protocol Buffers](https://protobuf.dev/) or [Avro](https://avro.apache.org/).
+
+### Message Delivery Guarantees
+
+Implement message acknowledgments (ACK).
+
+### Advanced Features
+
+- Exchanges and Advanced Routing: The current routing is a simplified version of topic exchange. Implement different types of exchanges, as seen in RabbitMQ.
+
+- Dead-Letter Queues (DLQ): When messages are rejected multiple times or cannot be routed, they should not be discarded but sent to a special "dead-letter queue." This allows for subsequent inspection and manual intervention.
+
+- Message TTL (Time-To-Live): Allow producers to set an expiration time for messages. If a message is not consumed within its TTL, it should be discarded or moved to a DLQ.
+
+### Configuration and Management
+
+-  Replace `java.util.Properties` with a more powerful configuration library, such as [PureConfig](https://pureconfig.github.io/) (based on HOCON/Typesafe Config). This provides type-safe configuration access.
+
+#### Management and Monitoring
+
+- Expose broker metrics (e.g., queue depth, message rate, memory usage) using libraries like [Micrometer](https://micrometer.io/) or [Dropwizard Metrics](https://metrics.dropwizard.io/). These metrics can be scraped by monitoring systems like Prometheus.
+
+### Clustering and High Availability
+
+For a truly production-ready system, it needs to be able to run as a cluster.
+
+Use a coordination service like [ZooKeeper](https://zookeeper.apache.org/), or a library implementing the [Raft consensus algorithm](https://raft.github.io/) for leader election and metadata management.
 
 ## Reference
 - [RabbitMQ3.5.3 source code commented version for easy reading)](https://github.com/sky-big/RabbitMQ)
@@ -132,7 +180,7 @@ libraryDependencies ++= Seq(
 ## LICENSE
 The MIT License (MIT)
 
-Copyright (c) 2023 Muqiu Han
+Copyright (c) 2023 - 2025 Somhairle H. Marisol
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -2,8 +2,8 @@ lazy val root = project
   .in(file("."))
   .settings(
       name         := "HanMQ",
-      version      := "0.1.0-SNAPSHOT",
-      scalaVersion := "3.4.2",
+      version      := "0.2.0",
+      scalaVersion := "3.7.2",
       libraryDependencies ++= Seq(
           "com.lihaoyi"       %% "upickle"         % "4.0.0",
           "com.outr"          %% "scribe"          % "3.15.0",

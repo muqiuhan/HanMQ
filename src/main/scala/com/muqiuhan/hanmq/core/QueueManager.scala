@@ -110,7 +110,7 @@ object QueueManager:
         // Ref to hold the map of queue names to their ZIO Queues.
         queueRefs <- Ref.make(Map.empty[String, Queue[String]])
         // Ref to hold the map of queue names to their worker Fiber references.
-        workerFibersRef <- Ref.make(Map.empty[String, Fiber.Runtime[_, _]])
+        workerFibersRef <- Ref.make(Map.empty[String, Fiber.Runtime[?, ?]])
         _               <- ZIO.succeed(scribe.info("QueueManager initialized"))
       yield new QueueManager:
         /** Add a queue and starts a dedicated worker fiber for it.

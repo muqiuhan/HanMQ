@@ -19,9 +19,12 @@
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/sbt/1.10.1/sbt-1.10.1.jar",
             "/home/somhairle/.sbt/boot/scala-2.12.19/lib/scala-library.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/2.0.13/sbt-bloop_2.12_1.0-2.0.13.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-sbt_2.12_1.0/4.13.3/gatling-sbt_2.12_1.0-4.13.3.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/main_2.12/1.10.1/main_2.12-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/io_2.12/1.10.0/io_2.12-1.10.0.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/bloop-config_2.12/2.3.2/bloop-config_2.12-2.3.2.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-enterprise-plugin-commons/1.16.2/gatling-enterprise-plugin-commons-1.16.2.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-shared-cli/0.0.6/gatling-shared-cli-0.0.6.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/logic_2.12/1.10.1/logic_2.12-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/actions_2.12/1.10.1/actions_2.12-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/main-settings_2.12/1.10.1/main-settings_2.12-1.10.1.jar",
@@ -47,6 +50,11 @@
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.13.0/jna-platform-5.13.0.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/plokhotnyuk/jsoniter-scala/jsoniter-scala-core_2.12/2.13.5.2/jsoniter-scala-core_2.12-2.13.5.2.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/unroll-annotation_2.12/0.1.12/unroll-annotation_2.12-0.1.12.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-scanner/1.6.5/gatling-scanner-1.6.5.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.3/config-1.4.3.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/spotbugs/spotbugs-annotations/4.9.3/spotbugs-annotations-4.9.3.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/util-relation_2.12/1.10.1/util-relation_2.12-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/completion_2.12/1.10.1/completion_2.12-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/task-system_2.12/1.10.1/task-system_2.12-1.10.1.jar",
@@ -80,6 +88,10 @@
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/mwiede/jsch/0.2.17/jsch-0.2.17.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/eed3si9n/gigahorse-apache-http_2.12/0.7.0/gigahorse-apache-http_2.12-0.7.0.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/ivy/ivy/2.3.0-sbt-396a783bba347016e7fe30dacc60d355be607fe2/ivy-2.3.0-sbt-396a783bba347016e7fe30dacc60d355be607fe2.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-asm-shaded/9.8.0/gatling-asm-shaded-9.8.0.jar",
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/jline/jline-reader/3.24.1/jline-reader-3.24.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/jline/jline-builtins/3.24.1/jline-builtins-3.24.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/test-agent/1.10.1/test-agent-1.10.1.jar",
@@ -102,8 +114,7 @@
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/zinc-persist-core-assembly/1.10.1/zinc-persist-core-assembly-1.10.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-sbt/sbinary_2.12/0.5.1/sbinary_2.12-0.5.1.jar",
             "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/ssl-config-core_2.12/0.6.1/ssl-config-core_2.12-0.6.1.jar",
-            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar",
-            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.2/config-1.4.2.jar"
+            "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3.jar"
         ],
         "out": "/home/somhairle/Workspace/HanMQ/project/.bloop/hanmq-build",
         "classesDir": "/home/somhairle/Workspace/HanMQ/project/.bloop/hanmq-build/scala-2.12/sbt-1.0/classes",
@@ -148,8 +159,8 @@
                 "import _root_.sbt._",
                 "import _root_.sbt.Keys._",
                 "import _root_.sbt.nio.Keys._",
-                "import _root_.sbt.ScriptedPlugin.autoImport._, _root_.sbt.plugins.JUnitXmlReportPlugin.autoImport._, _root_.sbt.plugins.MiniDependencyTreePlugin.autoImport._, _root_.bloop.integrations.sbt.BloopPlugin.autoImport._",
-                "import _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.SemanticdbPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.sbt.plugins.MiniDependencyTreePlugin, _root_.bloop.integrations.sbt.BloopPlugin"
+                "import _root_.sbt.ScriptedPlugin.autoImport._, _root_.sbt.plugins.JUnitXmlReportPlugin.autoImport._, _root_.sbt.plugins.MiniDependencyTreePlugin.autoImport._, _root_.bloop.integrations.sbt.BloopPlugin.autoImport._, _root_.io.gatling.sbt.GatlingPlugin.autoImport._",
+                "import _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.SemanticdbPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.sbt.plugins.MiniDependencyTreePlugin, _root_.bloop.integrations.sbt.BloopPlugin, _root_.io.gatling.sbt.GatlingPlugin"
             ]
         },
         "test": {
@@ -231,10 +242,22 @@
             "classpath": [
                 "/home/somhairle/Workspace/HanMQ/project/.bloop/hanmq-build/scala-2.12/sbt-1.0/classes",
                 "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/sbt-bloop_2.12_1.0/2.0.13/sbt-bloop_2.12_1.0-2.0.13.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-sbt_2.12_1.0/4.13.3/gatling-sbt_2.12_1.0-4.13.3.jar",
                 "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/bloop-config_2.12/2.3.2/bloop-config_2.12-2.3.2.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-enterprise-plugin-commons/1.16.2/gatling-enterprise-plugin-commons-1.16.2.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-shared-cli/0.0.6/gatling-shared-cli-0.0.6.jar",
                 "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/plokhotnyuk/jsoniter-scala/jsoniter-scala-core_2.12/2.13.5.2/jsoniter-scala-core_2.12-2.13.5.2.jar",
                 "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/unroll-annotation_2.12/0.1.12/unroll-annotation_2.12-0.1.12.jar",
-                "/home/somhairle/.sbt/boot/scala-2.12.19/lib/scala-library.jar"
+                "/home/somhairle/.sbt/boot/scala-2.12.19/lib/scala-library.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-scanner/1.6.5/gatling-scanner-1.6.5.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.3/config-1.4.3.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/spotbugs/spotbugs-annotations/4.9.3/spotbugs-annotations-4.9.3.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-asm-shaded/9.8.0/gatling-asm-shaded-9.8.0.jar",
+                "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"
             ]
         },
         "resolution": {
@@ -257,6 +280,23 @@
                     ]
                 },
                 {
+                    "organization": "io.gatling",
+                    "name": "gatling-sbt",
+                    "version": "4.13.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "gatling-sbt",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-sbt_2.12_1.0/4.13.3/gatling-sbt_2.12_1.0-4.13.3.jar"
+                        },
+                        {
+                            "name": "gatling-sbt",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-sbt_2.12_1.0/4.13.3/gatling-sbt_2.12_1.0-4.13.3-sources.jar"
+                        }
+                    ]
+                },
+                {
                     "organization": "ch.epfl.scala",
                     "name": "bloop-config_2.12",
                     "version": "2.3.2",
@@ -270,6 +310,40 @@
                             "name": "bloop-config_2.12",
                             "classifier": "sources",
                             "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/ch/epfl/scala/bloop-config_2.12/2.3.2/bloop-config_2.12-2.3.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.gatling",
+                    "name": "gatling-enterprise-plugin-commons",
+                    "version": "1.16.2",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "gatling-enterprise-plugin-commons",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-enterprise-plugin-commons/1.16.2/gatling-enterprise-plugin-commons-1.16.2.jar"
+                        },
+                        {
+                            "name": "gatling-enterprise-plugin-commons",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-enterprise-plugin-commons/1.16.2/gatling-enterprise-plugin-commons-1.16.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.gatling",
+                    "name": "gatling-shared-cli",
+                    "version": "0.0.6",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "gatling-shared-cli",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-shared-cli/0.0.6/gatling-shared-cli-0.0.6.jar"
+                        },
+                        {
+                            "name": "gatling-shared-cli",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-shared-cli/0.0.6/gatling-shared-cli-0.0.6-sources.jar"
                         }
                     ]
                 },
@@ -321,6 +395,159 @@
                             "name": "scala-library",
                             "classifier": "sources",
                             "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.12.19/scala-library-2.12.19-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.fasterxml.jackson.core",
+                    "name": "jackson-databind",
+                    "version": "2.18.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "jackson-databind",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3.jar"
+                        },
+                        {
+                            "name": "jackson-databind",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.3/jackson-databind-2.18.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.gatling",
+                    "name": "gatling-scanner",
+                    "version": "1.6.5",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "gatling-scanner",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-scanner/1.6.5/gatling-scanner-1.6.5.jar"
+                        },
+                        {
+                            "name": "gatling-scanner",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-scanner/1.6.5/gatling-scanner-1.6.5-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.codehaus.plexus",
+                    "name": "plexus-utils",
+                    "version": "4.0.2",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "plexus-utils",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar"
+                        },
+                        {
+                            "name": "plexus-utils",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.typesafe",
+                    "name": "config",
+                    "version": "1.4.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "config",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.3/config-1.4.3.jar"
+                        },
+                        {
+                            "name": "config",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.3/config-1.4.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.github.spotbugs",
+                    "name": "spotbugs-annotations",
+                    "version": "4.9.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "spotbugs-annotations",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/spotbugs/spotbugs-annotations/4.9.3/spotbugs-annotations-4.9.3.jar"
+                        },
+                        {
+                            "name": "spotbugs-annotations",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/spotbugs/spotbugs-annotations/4.9.3/spotbugs-annotations-4.9.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.fasterxml.jackson.core",
+                    "name": "jackson-annotations",
+                    "version": "2.18.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "jackson-annotations",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3.jar"
+                        },
+                        {
+                            "name": "jackson-annotations",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.3/jackson-annotations-2.18.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.fasterxml.jackson.core",
+                    "name": "jackson-core",
+                    "version": "2.18.3",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "jackson-core",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3.jar"
+                        },
+                        {
+                            "name": "jackson-core",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.3/jackson-core-2.18.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.gatling",
+                    "name": "gatling-asm-shaded",
+                    "version": "9.8.0",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "gatling-asm-shaded",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-asm-shaded/9.8.0/gatling-asm-shaded-9.8.0.jar"
+                        },
+                        {
+                            "name": "gatling-asm-shaded",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/io/gatling/gatling-asm-shaded/9.8.0/gatling-asm-shaded-9.8.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.google.code.findbugs",
+                    "name": "jsr305",
+                    "version": "3.0.2",
+                    "configurations": "default",
+                    "artifacts": [
+                        {
+                            "name": "jsr305",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"
+                        },
+                        {
+                            "name": "jsr305",
+                            "classifier": "sources",
+                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar"
                         }
                     ]
                 },
@@ -1715,23 +1942,6 @@
                             "name": "reactive-streams",
                             "classifier": "sources",
                             "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/org/reactivestreams/reactive-streams/1.0.3/reactive-streams-1.0.3-sources.jar"
-                        }
-                    ]
-                },
-                {
-                    "organization": "com.typesafe",
-                    "name": "config",
-                    "version": "1.4.2",
-                    "configurations": "default",
-                    "artifacts": [
-                        {
-                            "name": "config",
-                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.2/config-1.4.2.jar"
-                        },
-                        {
-                            "name": "config",
-                            "classifier": "sources",
-                            "path": "/home/somhairle/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.2/config-1.4.2-sources.jar"
                         }
                     ]
                 },
