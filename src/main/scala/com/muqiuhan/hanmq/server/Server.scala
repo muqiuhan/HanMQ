@@ -7,37 +7,29 @@ import zio.http.*
 import zio.http.ChannelEvent.*
 import zio.http.Server as ZIOHttpServer
 import scala.util.Try
-import scala.collection.mutable.Queue
 import upickle.default as Upickle
 import com.muqiuhan.hanmq.legacy.utils.Banner
 import com.muqiuhan.hanmq.legacy.config.Config
 
 object Server extends ZIOAppDefault:
 
-  private def route(data: String, channel: WebSocketChannel): Task[Unit] =
-    ZIO.attempt {
-      val message = Upickle.read[Message](data)
+  private def route(data: String, channel: WebSocketChannel): ZIO[BasicMap & QueueManager, Throwable, Unit] =
+    ZIO.attempt(Upickle.read[Message](data)).flatMap { message =>
       message.typ match
         case 0 /* Subscription */ => processConsumerMessage(channel, message)
         case 1 /* Producer */     => processProducerMessage(message)
-        case typ: Int             => throw new Exception(s"Unknown message type: $typ")
+        case typ: Int             => ZIO.fail(new Exception(s"Unknown message type: $typ"))
       end match
     }
 
-  private def processConsumerMessage(channel: WebSocketChannel, message: Message): Unit =
-    for queueName <- Upickle.read[List[String]](message.extend) do
-      if !BasicMap.queueConsumerMap.containsKey(queueName) then
-        val channels = new Queue[WebSocketChannel]()
-        channels.addOne(channel)
-        BasicMap.queueConsumerMap.put(queueName, channels)
-      else
-        BasicMap.queueConsumerMap.get(queueName).addOne(channel)
-      end if
-      QueueManager.signal(queueName)
-    end for
-  end processConsumerMessage
+  private def processConsumerMessage(channel: WebSocketChannel, message: Message): ZIO[BasicMap & QueueManager, Nothing, Unit] =
+    ZIO.attempt(Upickle.read[List[String]](message.extend)).orDie.flatMap { queueNames =>
+      ZIO.foreachDiscard(queueNames) { queueName =>
+        BasicMap.addConsumer(queueName, channel) *> QueueManager.signal(queueName)
+      }
+    }
 
-  private inline def processProducerMessage(message: Message): Unit =
+  private inline def processProducerMessage(message: Message): ZIO[BasicMap & QueueManager, Nothing, Unit] =
     QueueManager.put(message.content, message.extend)
 
   private def wrongMessageFormat(channel: WebSocketChannel, data: String): UIO[Unit] =
@@ -47,12 +39,10 @@ object Server extends ZIOAppDefault:
       _ <- channel.shutdown
     yield ()
 
-  private def handleDisconnect(channel: WebSocketChannel): UIO[Unit] =
-    ZIO.succeed {
-      BasicMap.queueConsumerMap.forEach((_, channels) => channels.filterInPlace(_ != channel))
-    }
+  private def handleDisconnect(channel: WebSocketChannel): ZIO[BasicMap, Nothing, Unit] =
+    BasicMap.removeChannelFromAllQueues(channel)
 
-  private val websocketApp: WebSocketApp[Any] =
+  private val websocketApp: WebSocketApp[BasicMap & QueueManager] =
     Handler.webSocket { channel =>
       channel.receiveAll {
         case UserEventTriggered(UserEvent.HandshakeComplete) =>
@@ -71,9 +61,10 @@ object Server extends ZIOAppDefault:
           yield ()
 
         case Read(WebSocketFrame.Text(data)) =>
-          route(data, channel).catchAll {
-            case e: upickle.core.AbortException => wrongMessageFormat(channel, data)
-            case e                              => ZIO.succeed(scribe.error(s"Error processing message: ${e.getMessage}"))
+          route(data, channel).catchAll { e =>
+            e match
+              case e: upickle.core.AbortException => wrongMessageFormat(channel, data)
+              case e                              => ZIO.succeed(scribe.error(s"Error processing message: ${e.getMessage}"))
           }
 
         case _ => ZIO.unit
@@ -82,11 +73,11 @@ object Server extends ZIOAppDefault:
 
   private val routes = Routes(Method.GET / "ws" -> handler(websocketApp.toResponse))
   private val server =
-    for
-      runtime <- ZIO.runtime[Any]
-      _       <- ZIO.succeed { QueueManager.runtime = runtime }
-      _       <- ZIOHttpServer.serve(routes).provide(ZIOHttpServer.default)
-    yield ()
+    ZIOHttpServer.serve(routes).provide(
+        ZIOHttpServer.default,
+        BasicMap.live,
+        QueueManager.live
+    )
 
   override def run: ZIO[Any & (ZIOAppArgs & Scope), Any, Any] =
     ZIO.attempt {

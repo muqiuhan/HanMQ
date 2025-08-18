@@ -1,53 +1,65 @@
 package com.muqiuhan.hanmq.core
 
 import zio.http.WebSocketFrame
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.LinkedBlockingQueue
-import zio.{Runtime, Unsafe}
+import zio.{Fiber, Queue, Ref, Runtime, Unsafe, ZIO, ZLayer}
 import zio.http.ChannelEvent.Read
 
+trait QueueManager:
+  def add(name: String): ZIO[Any, Nothing, Unit]
+  def put(message: String, queueName: String): ZIO[Any, Nothing, Unit]
+  def signal(queueName: String): ZIO[Any, Nothing, Unit]
+end QueueManager
+
 object QueueManager:
+  def add(name: String): ZIO[QueueManager, Nothing, Unit] =
+    ZIO.serviceWithZIO[QueueManager](_.add(name))
 
-  private val messageQueues = new ConcurrentHashMap[String, LinkedBlockingQueue[String]]()
-  private val workers       = new ConcurrentHashMap[String, Thread]()
-  // The ZIO runtime will be set from the main application
-  var runtime: Runtime[Any] = null
+  def put(message: String, queueName: String): ZIO[QueueManager, Nothing, Unit] =
+    ZIO.serviceWithZIO[QueueManager](_.put(message, queueName))
 
-  def add(name: String): Unit =
-    if !messageQueues.containsKey(name) then
-      messageQueues.put(name, new LinkedBlockingQueue[String]())
-      scribe.info(s"Created queue: $name")
-      val worker = new Thread(() =>
-        scribe.info(s"Worker thread started for queue: $name")
-        while true do
-          val message = messageQueues.get(name).take()
-          scribe.debug(s"Worker thread for queue $name received message: $message")
-          val consumers = BasicMap.queueConsumerMap.get(name)
-          scribe.debug(s"Found ${if consumers != null then consumers.size else 0} consumers for queue: $name")
-          if consumers != null then
-            consumers.foreach(channel =>
-              if runtime != null then
-                Unsafe.unsafe { implicit unsafe =>
-                  runtime.unsafe.run(channel.send(Read(WebSocketFrame.text(message)))).getOrThrowFiberFailure()
-                }
-              else
-                scribe.error("QueueManager runtime not initialized!")
-            )
-          else
-            scribe.warn(s"No consumers found for queue: $name")
-          end if
-        end while
-      )
-      worker.start()
-      workers.put(name, worker)
-    end if
-  end add
+  def signal(queueName: String): ZIO[QueueManager, Nothing, Unit] =
+    ZIO.serviceWithZIO[QueueManager](_.signal(queueName))
 
-  def put(message: String, queueName: String): Unit =
-    add(queueName)
-    messageQueues.get(queueName).put(message)
-  end put
+  val live: ZLayer[BasicMap, Nothing, QueueManager] =
+    ZLayer.fromZIO(
+        for
+          messageQueuesRef <- Ref.make(Map.empty[String, zio.Queue[String]])
+          workersRef       <- Ref.make(Map.empty[String, Fiber.Runtime[?, ?]])
+          basicMap         <- ZIO.service[BasicMap]
+        yield new QueueManager:
+          override def add(name: String): ZIO[Any, Nothing, Unit] =
+            messageQueuesRef.get.flatMap { messageQueues =>
+              messageQueues.get(name) match
+                case Some(_) => ZIO.unit // Queue already exists
+                case None =>
+                  for
+                    queue <- zio.Queue.unbounded[String]
+                    _     <- messageQueuesRef.update(_ + (name -> queue))
+                    _     <- ZIO.succeed(scribe.info(s"Created queue: $name"))
+                    _     <- ZIO.succeed(scribe.info(s"Worker fiber started for queue: $name"))
+                    fiber <- (
+                        (for
+                          message   <- queue.take // Blocks until a message is available
+                          _         <- ZIO.succeed(scribe.debug(s"Worker fiber for queue $name received message: $message"))
+                          consumers <- basicMap.getConsumers(name)
+                          _         <- ZIO.succeed(scribe.debug(s"Found ${consumers.size} consumers for queue: $name"))
+                          _ <- ZIO.foreachDiscard(consumers)(channel => channel.send(Read(WebSocketFrame.text(message))).ignore)
+                          _ <- ZIO.when(consumers.isEmpty)(ZIO.succeed(scribe.warn(s"No consumers found for queue: $name")))
+                        yield ()).forever
+                    ).forkDaemon
+                    _ <- workersRef.update(_ + (name -> fiber))
+                  yield ()
+            }
 
-  inline def signal(queueName: String): Unit = add(queueName)
+          override def put(message: String, queueName: String): ZIO[Any, Nothing, Unit] =
+            for
+              _ <- add(queueName) // Ensure queue exists and worker is running
+              _ <- messageQueuesRef.get.flatMap(_.get(queueName) match
+                case Some(queue) => queue.offer(message).unit
+                case None => ZIO.succeed(scribe.error(s"Queue $queueName not found after add attempt! This should not happen."))
+              )
+            yield ()
 
+          override inline def signal(queueName: String): ZIO[Any, Nothing, Unit] = add(queueName)
+    )
 end QueueManager
