@@ -10,7 +10,8 @@
             "/home/somhairle/Workspace/HanMQ/project/src/main/scala-2",
             "/home/somhairle/Workspace/HanMQ/project/src/main/java",
             "/home/somhairle/Workspace/HanMQ/project/src/main/scala-sbt-1.0",
-            "/home/somhairle/Workspace/HanMQ/project/target/scala-2.12/sbt-1.0/src_managed/main"
+            "/home/somhairle/Workspace/HanMQ/project/target/scala-2.12/sbt-1.0/src_managed/main",
+            "/home/somhairle/Workspace/HanMQ/project/Dependencies.scala"
         ],
         "dependencies": [
             
